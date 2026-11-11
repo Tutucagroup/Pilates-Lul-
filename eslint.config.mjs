@@ -18,7 +18,18 @@ const eslintConfig = [
       "out/**",
       "build/**",
       "next-env.d.ts",
+      "research/**",
     ],
+  },
+  {
+    // research/ es material privado de referencia: la app nunca lo importa.
+    files: ["src/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-imports": [
+        "error",
+        { patterns: [{ group: ["**/research/**", "@/../research/**"], message: "research/ es privado: no se importa en la app." }] },
+      ],
+    },
   },
 ];
 
