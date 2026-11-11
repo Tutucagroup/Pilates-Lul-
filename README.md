@@ -50,7 +50,7 @@ src/app/                      ← rutas: "/" (paso 1), "/q/[paso]", "/opinion", 
 data/testimonials.json        ← testimonios y reseñas REALES (vacío = las secciones no se muestran)
 supabase/migrations/          ← SQL de tablas, vistas y bucket
 creatives/                    ← 5 guiones de video + 5 textos de anuncio
-research/                     ← investigación privada (no se publica, no se importa, no se sube a Vercel)
+research/                     ← investigación privada (en .gitignore: no se sube a GitHub ni a Vercel)
 public/images/BRIEFS.md       ← brief de cada imagen
 ```
 
