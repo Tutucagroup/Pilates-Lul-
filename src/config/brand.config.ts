@@ -14,9 +14,17 @@ export const brand = {
   audience: "mujeres de 40 a 70 años",
   country: "AR",
   locale: "es-AR",
-  /** URL pública del funnel (sin barra final). Se usa en metadatos y Open Graph. */
-  siteUrl: process.env.NEXT_PUBLIC_SITE_URL ?? "https://pilateslulu.com",
-  supportEmail: "hola@pilateslulu.com",
+  /**
+   * URL pública del funnel (sin barra final). Se usa en metadatos y Open Graph.
+   * Si no definís NEXT_PUBLIC_SITE_URL, se usa sola la URL de producción de Vercel.
+   */
+  siteUrl:
+    process.env.NEXT_PUBLIC_SITE_URL ||
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : "http://localhost:3000"),
+  /** Email de soporte. Vacío = no se muestra. Usá uno de un dominio que sea tuyo. */
+  supportEmail: "",
 
   colors: {
     background: "#fafaf9",

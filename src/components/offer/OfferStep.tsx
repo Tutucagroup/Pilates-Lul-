@@ -139,7 +139,8 @@ export function OfferStepView({ summary, hydrated, stepIndex, stepName }: Props)
 
       <footer className="mt-10 text-center text-[13px] text-muted">
         <p>
-          {brand.name} · {brand.supportEmail}
+          {brand.name}
+          {brand.supportEmail ? ` · ${brand.supportEmail}` : null}
         </p>
         <p className="mt-1">
           Este programa no reemplaza la consulta con un profesional de la salud. Las imágenes son ilustrativas.

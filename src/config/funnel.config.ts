@@ -408,7 +408,7 @@ export const funnel: FunnelConfig = {
       },
       {
         q: "¿Qué pasa si no me gusta?",
-        a: `Tenés ${brand.guarantee.days} días de garantía: si no te convence, escribinos a ${brand.supportEmail} y te devolvemos el dinero.`,
+        a: `Tenés ${brand.guarantee.days} días de garantía: si no te convence, escribinos${brand.supportEmail ? ` a ${brand.supportEmail}` : ""} y te devolvemos el dinero.`,
       },
       {
         q: "¿Cómo puedo pagar?",
