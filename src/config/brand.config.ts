@@ -54,9 +54,9 @@ export const brand = {
 
   shopify: {
     /** Dominio .myshopify.com de la tienda (no el dominio propio). */
-    domain: "TIENDA.myshopify.com",
+    domain: "libia-app.myshopify.com",
     /** ID numérico de la variante del producto digital. */
-    variantId: "0000000000000",
+    variantId: "67954838274125",
   },
 
   meta: {
