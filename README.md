@@ -3,6 +3,8 @@
 Funnel tipo cuestionario para el **Reto de 28 días de Pilates Asiático** (mujeres de 40 a 70 años, Argentina).
 19 pasos → resultado personalizado → página de venta → checkout de **Shopify**.
 
+**En vivo:** https://pilates-lul.vercel.app
+
 Next.js 15 (App Router) · TypeScript · Tailwind 4 · Zustand · Supabase · Meta Pixel + Conversions API · Vercel.
 
 ---
@@ -266,9 +268,9 @@ Medido con el build de producción en local, perfil "Slow 4G" de Lighthouse mobi
 
 | Página | LCP | Elemento LCP |
 |---|---|---|
-| `/` (paso 1) | ~0,97 s | imagen hero |
-| `/q/no-estas-sola` | ~1,35 s | imagen |
-| `/q/oferta` | ~1,2 s | titular |
+| `/` (paso 1) | ~0,97 s local · ~0,9 s en Vercel | imagen hero |
+| `/q/no-estas-sola` | ~1,35 s local · ~1,27 s en Vercel | imagen |
+| `/q/oferta` | ~1,2 s local · ~1,14 s en Vercel | titular |
 
 Volvé a medir con PageSpeed Insights sobre tu dominio real después del deploy.
 
