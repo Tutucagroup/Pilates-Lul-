@@ -2,10 +2,10 @@
 import { useState } from "react";
 import { Award, ChevronLeft, ChevronRight, Clock, Flame, Trash2 } from "lucide-react";
 import { Button, Card, PageTitle, Ring } from "@/components/ui";
-import { TOTAL_DAYS, getClass } from "@/data/program";
+import { getClass, getPlan } from "@/data/program";
 import { addDays, dateKey, parseKey } from "@/lib/dates";
 import { computeStreak } from "@/lib/streak";
-import { doneCount, useApp, type Energy } from "@/lib/store";
+import { allDoneDates, doneCount, useActivePlan, useApp, type Energy } from "@/lib/store";
 
 const energies: { id: Energy; label: string; h: string }[] = [
   { id: "alta", label: "Con energía", h: "100%" },
@@ -24,11 +24,17 @@ export default function Progreso() {
   const removeWeight = useApp((s) => s.removeWeight);
 
   const today = dateKey();
-  const done = doneCount(completions);
-  const doneDates = new Set(Object.values(completions).map((c) => c.date));
+  const { plan, done: planDone } = useActivePlan();
+  const total = plan.classes.length;
+  const done = doneCount(planDone);
+  const doneDates = new Set(allDoneDates(completions));
   const { streak, freeDays } = computeStreak(doneDates, today);
   const free = new Set(freeDays);
-  const minutes = Object.keys(completions).reduce((sum, d) => sum + (getClass(Number(d))?.minutes ?? 0), 0);
+  const minutes = Object.entries(completions).reduce(
+    (sum, [id, days]) => sum + Object.keys(days).reduce((m, d) => m + (getClass(getPlan(id), Number(d))?.minutes ?? 0), 0),
+    0,
+  );
+  const milestones = [...new Set([7, 14, total])].filter((n) => n <= total).sort((a, b) => a - b);
 
   // Calendario mensual
   const [offset, setOffset] = useState(0);
@@ -53,10 +59,10 @@ export default function Progreso() {
 
   return (
     <div className="animate-fade-up space-y-4 pt-2">
-      <PageTitle title="Tu progreso" />
+      <PageTitle title="Tu progreso" subtitle={plan.name} />
 
       <div className="grid grid-cols-[auto_1fr] gap-4">
-        <Card className="flex items-center justify-center"><Ring value={done} total={TOTAL_DAYS} /></Card>
+        <Card className="flex items-center justify-center"><Ring value={done} total={total} /></Card>
         <Card className="flex flex-col justify-center gap-2.5">
           <p className="flex items-center gap-2.5"><Flame className="shrink-0 text-brand" size={22} /><span><b className="font-display text-[22px] font-semibold">{streak}</b> <span className="text-muted">{streak === 1 ? "día de racha" : "días de racha"}</span></span></p>
           <p className="flex items-center gap-2.5"><Clock className="shrink-0 text-sage" size={22} /><span><b className="font-display text-[22px] font-semibold">{minutes}</b> <span className="text-muted">min en total</span></span></p>
@@ -135,12 +141,12 @@ export default function Progreso() {
       <Card>
         <h2 className="font-display text-[22px] font-semibold">Tus logros</h2>
         <ul className="mt-3 grid grid-cols-3 gap-2.5">
-          {[7, 14, 28].map((n) => {
+          {milestones.map((n) => {
             const got = done >= n;
             return (
               <li key={n} className={`flex flex-col items-center rounded-2xl p-3 text-center ${got ? "bg-brand-soft" : "bg-bg"}`}>
                 <Award size={30} className={got ? "text-brand" : "text-muted/50"} />
-                <span className="mt-1 font-bold">Día {n}</span>
+                <span className="mt-1 font-bold">{n === total ? "Plan completo" : `Día ${n}`}</span>
                 <span className="text-[13px] text-muted">{got ? "Logrado" : `Te faltan ${n - done}`}</span>
               </li>
             );

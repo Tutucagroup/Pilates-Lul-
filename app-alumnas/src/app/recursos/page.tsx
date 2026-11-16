@@ -15,7 +15,7 @@ export default function Recursos() {
         <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-brand-soft text-brand"><BookOpenText size={22} /></span>
         <span className="flex-1">
           <span className="block font-bold">Guía de bienvenida</span>
-          <span className="block text-[15px] text-muted">Hábitos y consejos para tus 28 días</span>
+          <span className="block text-[15px] text-muted">Hábitos y consejos para tu plan</span>
         </span>
         <ChevronRight className="text-muted" size={20} />
       </Link>

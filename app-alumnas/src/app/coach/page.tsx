@@ -6,7 +6,7 @@ import { ArrowUp, MessageCircleHeart, Trash2 } from "lucide-react";
 import { getClass } from "@/data/program";
 import { dateKey } from "@/lib/dates";
 import { computeStreak } from "@/lib/streak";
-import { currentDay, doneCount, useApp, type ChatMessage } from "@/lib/store";
+import { allDoneDates, currentDay, doneCount, useActivePlan, useApp, type ChatMessage } from "@/lib/store";
 
 const DAILY_LIMIT = Number(process.env.NEXT_PUBLIC_COACH_DAILY_LIMIT) || 20;
 const suggestions = ["No sé qué comer hoy", "Hoy no tengo ganas", "Me molesta la espalda", "Falté unos días, ¿cómo sigo?"];
@@ -16,7 +16,8 @@ const levelText = { nunca: "nunca hizo pilates", algo: "hizo algo hace tiempo", 
 function Coach() {
   const params = useSearchParams();
   const classDay = Number(params.get("clase")) || null;
-  const cls = classDay ? getClass(classDay) : undefined;
+  const { plan, done: planDone } = useActivePlan();
+  const cls = classDay ? getClass(plan, classDay) : undefined;
 
   const profile = useApp((s) => s.profile)!;
   const completions = useApp((s) => s.completions);
@@ -61,9 +62,11 @@ function Coach() {
             level: levelText[profile.level],
             diet: profile.diet === "todo" ? "come de todo" : profile.diet,
             cares: profile.cares,
-            day: currentDay(completions),
-            done: doneCount(completions),
-            streak: computeStreak(Object.values(completions).map((c) => c.date), today).streak,
+            plan: plan.name,
+            totalDays: plan.classes.length,
+            day: currentDay(plan, planDone),
+            done: doneCount(planDone),
+            streak: computeStreak(allDoneDates(completions), today).streak,
             energy: energy[today],
             classDay: cls?.day,
           },

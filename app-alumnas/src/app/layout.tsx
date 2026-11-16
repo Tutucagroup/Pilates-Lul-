@@ -8,7 +8,7 @@ const fraunces = Fraunces({ subsets: ["latin"], variable: "--font-fraunces", dis
 
 export const metadata: Metadata = {
   title: { default: "Pilates Lulú", template: "%s · Pilates Lulú" },
-  description: "Tu reto de 28 días de pilates en casa: clase diaria, plan de comidas, progreso y coach virtual.",
+  description: "Tus planes de pilates en casa: clase diaria, plan de comidas, progreso y coach virtual.",
   // Es el producto para alumnas: que no aparezca en buscadores.
   robots: { index: false, follow: false },
   appleWebApp: { capable: true, title: "Pilates Lulú", statusBarStyle: "default" },

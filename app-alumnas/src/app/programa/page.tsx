@@ -3,40 +3,66 @@ import Link from "next/link";
 import { useState } from "react";
 import { Check, Clock, Lock, Play } from "lucide-react";
 import { Chip, LinkButton, PageTitle, Ring } from "@/components/ui";
-import { TOTAL_DAYS, program, weekOf, weeks } from "@/data/program";
-import { currentDay, doneCount, isUnlocked, useApp } from "@/lib/store";
+import { plans, weekOf } from "@/data/program";
+import { currentDay, doneCount, isUnlocked, useActivePlan, useApp } from "@/lib/store";
 
 export default function Programa() {
-  const completions = useApp((s) => s.completions);
+  const { plan, done: completions } = useActivePlan();
+  const setActivePlan = useApp((s) => s.setActivePlan);
+  const total = plan.classes.length;
   const done = doneCount(completions);
-  const day = currentDay(completions);
-  const finished = done >= TOTAL_DAYS;
-  const [week, setWeek] = useState(weekOf(day));
-  const info = weeks[week - 1];
+  const day = currentDay(plan, completions);
+  const finished = done >= total;
+  const [pickedWeek, setWeek] = useState<number | null>(null);
+  const week = pickedWeek ?? weekOf(plan, day);
+  const info = plan.weeks[week - 1];
 
   return (
     <div className="animate-fade-up pt-2">
-      <PageTitle title="Tu programa" subtitle="28 días, una clase por día" />
+      <PageTitle title="Tu programa" subtitle="Elegí el plan que querés hacer" />
+
+      <div className="mb-4 space-y-2" role="group" aria-label="Elegí un plan">
+        {plans.map((p) => {
+          const active = p.id === plan.id;
+          return (
+            <button
+              key={p.id}
+              type="button"
+              aria-pressed={active}
+              onClick={() => { setActivePlan(p.id); setWeek(null); }}
+              className={`flex w-full items-center gap-3 rounded-2xl p-3.5 text-left ring-1 transition-colors ${active ? "bg-brand-soft ring-2 ring-brand" : "bg-surface ring-line"}`}
+            >
+              <span className="min-w-0 flex-1">
+                <span className="block font-bold leading-snug">{p.name}</span>
+                <span className="block text-[14.5px] text-muted">{p.subtitle} · {p.classes.length} clases</span>
+              </span>
+              <span className={`flex size-6 shrink-0 items-center justify-center rounded-full ring-2 ${active ? "bg-brand text-white ring-brand [[data-theme=dark]_&]:text-bg" : "ring-line"}`}>
+                {active && <Check size={15} strokeWidth={3.5} />}
+              </span>
+            </button>
+          );
+        })}
+      </div>
 
       <section className="flex items-center gap-4 rounded-3xl bg-brand-soft p-5">
-        <Ring value={done} total={TOTAL_DAYS} size={88} />
+        <Ring value={done} total={total} size={88} />
         <div className="min-w-0 flex-1">
           <p className="font-display text-[20px] font-semibold leading-tight">
-            {finished ? "Reto completo" : done === 0 ? "Tu momento es hoy" : `Vas por el día ${day}`}
+            {finished ? "Plan completo" : done === 0 ? "Tu momento es hoy" : `Vas por el día ${day}`}
           </p>
           {!finished && <LinkButton href={`/programa/${day}`} className="mt-3 !min-h-11 !py-2 !text-[16px]"><Play size={17} fill="currentColor" /> {done === 0 ? "Empezar" : "Continuar"}</LinkButton>}
         </div>
       </section>
 
       <div className="no-scrollbar -mx-4 mt-5 flex gap-2 overflow-x-auto px-4" role="group" aria-label="Elegí una semana">
-        {weeks.map((w) => <Chip key={w.n} active={week === w.n} onClick={() => setWeek(w.n)}>Semana {w.n}</Chip>)}
+        {plan.weeks.map((_, i) => <Chip key={i} active={week === i + 1} onClick={() => setWeek(i + 1)}>Semana {i + 1}</Chip>)}
       </div>
 
-      <h2 className="mt-5 font-display text-[22px] font-semibold">Semana {info.n} · {info.name}</h2>
+      <h2 className="mt-5 font-display text-[22px] font-semibold">Semana {week} · {info.name}</h2>
       <p className="text-muted">{info.text}</p>
 
       <ol className="mt-4 space-y-2.5">
-        {program.filter((c) => weekOf(c.day) === week).map((c) => {
+        {plan.classes.filter((c) => weekOf(plan, c.day) === week).map((c) => {
           const isDone = !!completions[c.day];
           const unlocked = isUnlocked(c.day, completions);
           const isToday = !finished && c.day === day;

@@ -1,6 +1,6 @@
 # Pilates Lulú · App de alumnas
 
-El producto que recibe la alumna después de comprar: reto de 28 días con clase diaria en video, plan de comidas, recetas, progreso y coach virtual.
+El producto que recibe la alumna después de comprar: dos planes de pilates con clase diaria en video, plan de comidas, recetas, progreso y coach virtual.
 
 Es un proyecto **independiente** de la landing (que vive en la raíz del repositorio). Tiene sus propias dependencias y se publica como **otro proyecto de Vercel**.
 
@@ -15,20 +15,24 @@ Next.js 15 · TypeScript · Tailwind 4 · Zustand · API de Anthropic (coach).
 
 Cada vez que se suben cambios a la rama de producción, Vercel vuelve a publicar solo.
 
-## Cargar los 28 videos
+## Planes y videos
 
-1. Subí cada video a YouTube con visibilidad **No listado**.
-2. Abrí `src/data/videos.ts` y pegá el enlace de cada día entre las comillas.
-3. Si la duración real no es la que figura, ajustá `minutes` en `src/data/program.ts`.
+La app trae dos planes, con videos del canal de YouTube "Fuerte después de los 50 con Eu":
 
-Mientras un día no tenga enlace, la clase muestra "Video en preparación".
+| Plan | Clases | Lista de YouTube de origen |
+|---|---|---|
+| Pilates Asiático · 28 días | 28 (una por día) | "Reto 28 Días Pilates. Fuerte Después de los 50!" |
+| Rejuvenecé después de los 50 | 20 (5 por semana, 4 semanas) | "Reto Pilates - Mes 1" (semanas 1 y 2) y "Mes 2" (semanas 3 y 4) |
+
+Todo está en `src/data/program.ts`. Para cambiar un video, reemplazá el ID (lo que va después de `v=` en el enlace de YouTube). Ahí mismo se editan título, duración, descripción y elementos necesarios de cada clase.
+
+Los videos se reproducen con el reproductor de YouTube: si un video se borra, se pone en privado o se le desactiva la inserción, esa clase deja de verse.
 
 ## Dónde está cada cosa
 
 | Archivo | Qué editás ahí |
 |---|---|
-| `src/data/videos.ts` | Enlace de YouTube de cada una de las 28 clases |
-| `src/data/program.ts` | Título, tipo, duración, descripción y variante suave de cada clase |
+| `src/data/program.ts` | Los dos planes: video, título, tipo, duración y descripción de cada clase |
 | `src/data/recipes.ts` | Recetas (el plan de comidas diario se arma solo a partir de estas) |
 | `src/data/tips.ts` | Tip del día (28) |
 | `src/data/faq.ts` | Preguntas frecuentes de la pantalla Ayuda |
@@ -50,7 +54,7 @@ El chat llama a `/api/coach`, que usa la API de Anthropic desde el servidor.
 
 - **No hay cuentas ni control de acceso.** Cualquiera que tenga la dirección puede entrar. Para que solo entren quienes compraron hace falta sumar inicio de sesión y enlazarlo con la compra.
 - **El progreso se guarda en el dispositivo** (almacenamiento del navegador). No se sincroniza entre celulares y se pierde si se borran los datos del navegador.
-- **El repositorio es público**, así que los enlaces de los videos que cargues en `videos.ts` quedan a la vista de quien lea el código.
+- **Los videos son públicos en YouTube.** Cualquiera puede verlos gratis en el canal, sin pasar por la app.
 
 ## Desarrollo local
 

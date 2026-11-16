@@ -4,7 +4,7 @@ export default function manifest(): MetadataRoute.Manifest {
   return {
     name: "Pilates Lulú",
     short_name: "Pilates Lulú",
-    description: "Tu reto de 28 días de pilates en casa.",
+    description: "Tus planes de pilates en casa.",
     start_url: "/",
     display: "standalone",
     orientation: "portrait",

@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Back } from "@/components/Back";
 import { Button, Card, Chip, PageTitle } from "@/components/ui";
 import type { Diet } from "@/lib/mealplan";
-import { doneCount, useApp } from "@/lib/store";
+import { doneCount, useActivePlan, useApp } from "@/lib/store";
 
 const diets: { id: Diet; label: string }[] = [
   { id: "todo", label: "Como de todo" },
@@ -17,7 +17,7 @@ export default function Perfil() {
   const router = useRouter();
   const profile = useApp((s) => s.profile)!;
   const setProfile = useApp((s) => s.setProfile);
-  const completions = useApp((s) => s.completions);
+  const { plan, done: completions } = useActivePlan();
   const restartProgram = useApp((s) => s.restartProgram);
   const resetAll = useApp((s) => s.resetAll);
   const [name, setName] = useState(profile.name);
@@ -53,13 +53,13 @@ export default function Perfil() {
       </Card>
 
       <Card>
-        <h2 className="font-bold">Reiniciar el reto</h2>
+        <h2 className="font-bold">Reiniciar el plan</h2>
         <p className="mt-0.5 text-[15px] text-muted">
-          Volvés al día 1. Se borran las {doneCount(completions)} clases marcadas; tu energía y tu peso se conservan.
+          Volvés al día 1 de «{plan.name}». Se borran las {doneCount(completions)} clases marcadas de ese plan; tu energía y tu peso se conservan.
         </p>
         <Button
           variant="ghost" className="mt-3" disabled={doneCount(completions) === 0}
-          onClick={() => { if (confirm("¿Reiniciar el reto y volver al día 1?")) { restartProgram(); router.push("/"); } }}
+          onClick={() => { if (confirm("¿Reiniciar este plan y volver al día 1?")) { restartProgram(plan.id); router.push("/"); } }}
         >
           Reiniciar desde el día 1
         </Button>

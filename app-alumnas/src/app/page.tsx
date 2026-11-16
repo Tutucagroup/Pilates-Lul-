@@ -4,26 +4,30 @@ import { useState } from "react";
 import { BookOpenText, ChevronRight, Clock, Flame, Lightbulb, PartyPopper, Play, X } from "lucide-react";
 import { MealPlan } from "@/components/MealPlan";
 import { Card, Eyebrow, LinkButton, Ring } from "@/components/ui";
-import { TOTAL_DAYS, getClass, weekOf, weeks } from "@/data/program";
+import { getClass, weekOf } from "@/data/program";
 import { tips } from "@/data/tips";
 import { dateKey } from "@/lib/dates";
 import { computeStreak } from "@/lib/streak";
-import { currentDay, doneCount, useApp } from "@/lib/store";
+import { allDoneDates, currentDay, doneCount, useActivePlan, useApp } from "@/lib/store";
 
 export default function Home() {
   const profile = useApp((s) => s.profile)!;
   const completions = useApp((s) => s.completions);
   const [tipOpen, setTipOpen] = useState(false);
 
-  const done = doneCount(completions);
-  const finished = done >= TOTAL_DAYS;
-  const day = currentDay(completions);
-  const cls = getClass(day)!;
-  const tip = tips[day - 1];
+  const { plan, done: doneMap } = useActivePlan();
+  const total = plan.classes.length;
+  const done = doneCount(doneMap);
+  const finished = done >= total;
+  const day = currentDay(plan, doneMap);
+  const cls = getClass(plan, day)!;
+  const tip = tips[(day - 1) % tips.length];
   const today = dateKey();
-  const doneToday = Object.values(completions).some((c) => c.date === today);
-  const { streak } = computeStreak(Object.values(completions).map((c) => c.date), today);
-  const week = weeks[weekOf(day) - 1];
+  const dates = allDoneDates(completions);
+  const doneToday = dates.includes(today);
+  const { streak } = computeStreak(dates, today);
+  const weekN = weekOf(plan, day);
+  const week = plan.weeks[weekN - 1];
 
   return (
     <div className="animate-fade-up space-y-4 pt-2">
@@ -31,26 +35,27 @@ export default function Home() {
         <h1 className="font-display text-[30px] font-semibold leading-tight">Hola, {profile.name}</h1>
         <p className="mt-1 text-muted">
           {finished
-            ? "Completaste tu reto. Podés repetir la clase que quieras."
+            ? "Completaste este plan. Podés repetir la clase que quieras."
             : done === 0
-              ? "Tu reto de 28 días empieza hoy."
+              ? "Tu plan empieza hoy."
               : doneToday
                 ? "Clase de hoy cumplida. Mañana seguimos."
-                : `Semana ${week.n} · ${week.name}`}
+                : `Semana ${weekN} · ${week.name}`}
         </p>
       </header>
 
       {finished ? (
         <Card className="bg-brand-soft text-center ring-0">
           <PartyPopper className="mx-auto text-brand" size={36} />
-          <h2 className="mt-2 font-display text-[24px] font-semibold">28 días cumplidos</h2>
+          <h2 className="mt-2 font-display text-[24px] font-semibold">Plan completo</h2>
           <p className="mt-1 text-muted">Lo hiciste. Tu cuerpo ya conoce el camino.</p>
-          <LinkButton href="/programa" className="mt-4">Ver todas las clases</LinkButton>
+          <LinkButton href="/programa" className="mt-4">Ver clases y elegir otro plan</LinkButton>
         </Card>
       ) : (
         <Card className="overflow-hidden !p-0">
           <div className="bg-brand-soft px-5 pb-5 pt-4">
             <Eyebrow>{doneToday ? `Próxima clase · Día ${day}` : `Tu clase de hoy · Día ${day}`}</Eyebrow>
+            <p className="mt-0.5 text-[14px] font-bold text-muted">{plan.name}</p>
             <h2 className="mt-1.5 font-display text-[25px] font-semibold leading-tight">{cls.title}</h2>
             <p className="mt-2 flex items-center gap-3 text-[15px] font-bold text-muted">
               <span>{cls.category}</span>
@@ -68,7 +73,7 @@ export default function Home() {
 
       <div className="grid grid-cols-[auto_1fr] gap-4">
         <Card className="flex items-center justify-center">
-          <Ring value={done} total={TOTAL_DAYS} />
+          <Ring value={done} total={total} />
         </Card>
         <Card className="flex flex-col justify-center gap-3">
           <p className="flex items-center gap-2.5">
@@ -111,7 +116,7 @@ export default function Home() {
         <span className="flex size-11 shrink-0 items-center justify-center rounded-full bg-brand-soft text-brand"><BookOpenText size={22} /></span>
         <span className="flex-1">
           <span className="block font-bold">Guía de bienvenida</span>
-          <span className="block text-[15px] text-muted">Cómo aprovechar tus 28 días</span>
+          <span className="block text-[15px] text-muted">Cómo aprovechar tu plan</span>
         </span>
         <ChevronRight className="text-muted" size={20} />
       </Link>

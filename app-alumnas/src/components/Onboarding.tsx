@@ -70,7 +70,7 @@ export function Onboarding() {
         {step === 0 && (
           <>
             <h1 className="font-display text-[30px] font-semibold leading-tight">Te damos la bienvenida</h1>
-            <p className="mt-2 text-muted">Cuatro preguntas cortas para armar tu reto de 28 días.</p>
+            <p className="mt-2 text-muted">Cuatro preguntas cortas para preparar tu plan.</p>
             <label htmlFor="name" className="mt-8 block font-bold">¿Cómo te llamás?</label>
             <input
               id="name"
@@ -121,7 +121,7 @@ export function Onboarding() {
 
       <div className="mt-8 flex gap-3">
         {step > 0 && <Button variant="ghost" className="!w-auto" onClick={() => setStep(step - 1)}>Atrás</Button>}
-        <Button onClick={next} disabled={!canNext}>{step === 3 ? "Empezar mi reto" : "Continuar"}</Button>
+        <Button onClick={next} disabled={!canNext}>{step === 3 ? "Empezar" : "Continuar"}</Button>
       </div>
       {step === 3 && (
         <p className="mt-4 text-center text-[14px] text-muted">

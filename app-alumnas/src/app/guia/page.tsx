@@ -3,10 +3,10 @@ import { Card, LinkButton, PageTitle } from "@/components/ui";
 
 const sections = [
   {
-    title: "Cómo funciona el reto",
+    title: "Cómo funciona",
     items: [
-      "Son 28 días, con una clase corta en video por día.",
-      "Cada semana tiene un foco: despertar, fortalecer, fluir e integrar.",
+      "Hay dos planes. Elegí uno en Programa; podés cambiar cuando quieras.",
+      "Pilates Asiático · 28 días: una clase por día. Rejuvenecé después de los 50: cinco rutinas cortas por semana.",
       "Al terminar la clase, marcala como hecha para habilitar la siguiente.",
       "Tenés un día libre por semana sin perder la racha.",
     ],
@@ -16,7 +16,7 @@ const sections = [
     items: [
       "Una colchoneta, o una manta doblada sobre una alfombra.",
       "Ropa cómoda y los pies descalzos o con medias antideslizantes.",
-      "Una silla firme cerca, para las clases de equilibrio.",
+      "Algunas clases piden una silla, una toalla o un libro grueso. Te lo avisamos antes de empezar.",
       "Un vaso de agua a mano.",
     ],
   },
@@ -33,7 +33,7 @@ const sections = [
     items: [
       "La respiración manda: si la perdés, frená y retomá.",
       "Pocas repeticiones bien hechas valen más que muchas apuradas.",
-      "Usá la variante suave cada vez que la necesites. No es hacer menos, es hacerlo bien para tu cuerpo.",
+      "Bajá la intensidad cada vez que lo necesites: menos recorrido, menos repeticiones o una pausa.",
       "Sentir el músculo trabajar es normal. Un dolor agudo o punzante no: frená.",
     ],
   },
@@ -71,7 +71,7 @@ export default function Guia() {
           <p className="mt-1.5">Este programa es de bienestar general y no reemplaza la atención médica. Si tenés una condición de salud, una cirugía reciente o estás embarazada, consultá con tu médica o médico antes de empezar.</p>
         </Card>
       </div>
-      <LinkButton href="/programa/1" className="mt-5">Ir a mi primera clase</LinkButton>
+      <LinkButton href="/programa" className="mt-5">Elegir mi plan</LinkButton>
     </div>
   );
 }

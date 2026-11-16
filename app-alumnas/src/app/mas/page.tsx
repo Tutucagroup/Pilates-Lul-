@@ -4,9 +4,9 @@ import { PageTitle } from "@/components/ui";
 
 const items = [
   { href: "/coach", icon: MessageCircleHeart, title: "Coach Lulú", text: "Tu asistente virtual para dudas del reto" },
-  { href: "/guia", icon: BookOpenText, title: "Guía de bienvenida", text: "Cómo aprovechar tus 28 días" },
+  { href: "/guia", icon: BookOpenText, title: "Guía de bienvenida", text: "Cómo aprovechar tu plan" },
   { href: "/recursos", icon: LibraryBig, title: "Recursos", text: "Guías y materiales extra" },
-  { href: "/perfil", icon: UserRound, title: "Mi perfil", text: "Tus datos, alimentación y reinicio del reto" },
+  { href: "/perfil", icon: UserRound, title: "Mi perfil", text: "Tus datos, alimentación y reinicio del plan" },
   { href: "/ayuda", icon: CircleHelp, title: "Ayuda", text: "Preguntas frecuentes e instalación" },
 ];
 
