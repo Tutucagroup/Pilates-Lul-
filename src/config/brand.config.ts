@@ -40,9 +40,9 @@ export const brand = {
 
   pricing: {
     currency: "ARS",
-    /** Precio de lista (se muestra tachado). En Shopify: "Precio de comparación". */
+    /** Precio de lista (se muestra tachado). Tiene que coincidir con el precio tachado de Impultienda. */
     listPrice: 45000,
-    /** Precio de oferta. En Shopify: "Precio". */
+    /** Precio de oferta. Tiene que coincidir con el precio del producto en Impultienda. */
     offerPrice: 19900,
     /** Cuotas sin interés que ofrece tu medio de pago. 0 o 1 = no mostrar cuotas. */
     installments: 3,
@@ -52,11 +52,11 @@ export const brand = {
     days: 7,
   },
 
-  shopify: {
-    /** Dominio .myshopify.com de la tienda (no el dominio propio). */
-    domain: "libia-app.myshopify.com",
-    /** ID numérico de la variante del producto digital. */
-    variantId: "67954838274125",
+  impultienda: {
+    /** Link al checkout de la tienda de Impultienda (el botón de compra del quiz lleva acá). */
+    checkoutUrl: "https://pilates-lulu.impultienda.ar/checkout",
+    /** ID del producto que se manda a Meta en InitiateCheckout (content_ids). */
+    productId: "pilates-lulu-reto-28",
   },
 
   meta: {

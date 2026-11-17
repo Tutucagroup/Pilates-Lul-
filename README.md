@@ -1,7 +1,7 @@
 # Pilates Lulú · Funnel quiz + página de venta
 
 Funnel tipo cuestionario para el **Reto de 28 días de Pilates Asiático** (mujeres de 40 a 70 años, Argentina).
-19 pasos → resultado personalizado → página de venta → checkout de **Shopify**.
+19 pasos → resultado personalizado → página de venta → checkout de **Impultienda**.
 
 **En vivo:** https://pilates-lul.vercel.app
 
@@ -41,12 +41,12 @@ Abrí http://localhost:3000. Sin variables de entorno el funnel funciona igual: 
 ## Dónde está cada cosa
 
 ```
-src/config/brand.config.ts    ← ÚNICA fuente de verdad: marca, precios, garantía, Shopify, Pixel, urgencia
+src/config/brand.config.ts    ← ÚNICA fuente de verdad: marca, precios, garantía, checkout, Pixel, urgencia
 src/config/funnel.config.ts   ← pasos, textos, opciones, imágenes, reglas, A/B y contenido de la oferta
 src/funnel/                   ← tipos, motor del funnel (funciones puras) y store Zustand
 src/lib/rules/                ← personalización: IMC, ritmo, nivel, orden de beneficios, resumen (+ tests)
 src/lib/pricing.ts            ← descuento y cuotas calculados desde brand.config
-src/lib/checkout.ts           ← arma el cart permalink de Shopify
+src/lib/checkout.ts           ← arma el link al checkout de Impultienda
 src/lib/tracking/             ← Pixel + CAPI + eventos a Supabase
 src/components/steps/         ← los 7 componentes de paso: single, multi, info, ruler, loader, result
 src/components/offer/         ← página de venta (offer), precio, botón, testimonios, reseñas, FAQ, urgencia
@@ -72,7 +72,7 @@ program: { name: "Reto de 28 días", days: 28, minutesPerDay: 15 },
 
 - El **% OFF** se calcula solo (`56%`) y las **cuotas** también (`3 × $6.633`). Ningún componente tiene precios escritos a mano.
 - `installments: 0` oculta las cuotas.
-- Si cambiás el precio acá, **cambialo también en Shopify** (precio y precio de comparación).
+- Si cambiás el precio acá, **cambialo también en Impultienda** (precio y precio tachado).
 - Los colores de marca están en `brand.config.ts` y espejados en `src/app/globals.css` (`@theme`). Si cambiás uno, cambiá el otro.
 
 ### Urgencia (apagada por defecto)
@@ -126,7 +126,7 @@ Todo en `src/config/funnel.config.ts`. Cada paso es un objeto con `id`, `name` (
 ```
 
 - La asignación es determinística por sesión + paso (siempre ve la misma variante).
-- La variante viaja en cada evento (`quiz_step`, Supabase) y al carrito de Shopify (`ab_variants`).
+- La variante viaja en cada evento (`quiz_step`, Supabase) (se guarda en Supabase con cada sesión).
 - Resultados: vista `ab_results` en Supabase (sesiones, llegaron al resultado, tocaron comprar).
 - Un paso con test se oculta hasta rehidratar para no parpadear: evitá testear el paso 1 si te importa el LCP.
 
@@ -190,34 +190,29 @@ Todas las tablas tienen RLS sin políticas públicas: solo el backend (service r
 
 ---
 
-## Checkout Shopify
+## Checkout Impultienda
 
-El botón de compra arma un **cart permalink**:
+Tienda: **Pilates Lulú** · https://pilates-lulu.impultienda.ar (tienda clásica "solo HTML").
+
+El botón de compra del quiz lleva al checkout de la tienda con las UTM y el `fbclid` de la visita:
 
 ```
-https://TIENDA.myshopify.com/cart/{variantId}:1
-  ?attributes[quiz_session]=…&attributes[utm_source]=…&attributes[fbclid]=…
-  &attributes[checkout_event_id]=…&attributes[quiz_level]=suave&attributes[ab_variants]=edad:B
-  &utm_source=…&utm_campaign=…&fbclid=…
+https://pilates-lulu.impultienda.ar/checkout?utm_source=…&utm_campaign=…&fbclid=…
 ```
 
-Los atributos quedan en el pedido (Pedido → "Detalles adicionales"), así podés cruzar cada venta con su sesión del quiz en Supabase.
+El link se cambia en `brand.config.ts → impultienda.checkoutUrl`.
 
-### 1 · Producto digital
-1. Shopify Admin → **Productos → Agregar producto**: "Reto de 28 días de Pilates Asiático".
-2. **Precio:** `19900`. **Precio de comparación:** `45000`.
-3. En **Envío**, desmarcá "Es un producto físico".
-4. **Inventario:** sin seguimiento de stock (o "Continuar vendiendo sin stock").
-5. Publicalo en el canal **Tienda online** (los cart permalinks lo necesitan).
+### 1 · Landing de la tienda
+La landing de la tienda es una página corta con el botón **"Hacer el test gratis"**, que lleva al quiz (https://pilates-lul.vercel.app). Los anuncios conviene que apunten directo al quiz.
 
-### 2 · Entrega automática del acceso por email
-Opción simple (gratis): instalá la app oficial **Digital Downloads** de Shopify → abrí el producto → "Más acciones → Digital Downloads" → subí un PDF con el link y las instrucciones de acceso (o el archivo del programa). Shopify manda el email de descarga automáticamente al confirmarse el pago.
-Opción alternativa: en **Configuración → Notificaciones → Confirmación de pedido**, agregá un bloque Liquid que muestre el link de acceso cuando el pedido incluya este producto.
-Hacé una compra de prueba (modo de prueba de Shopify Payments o pasarela "Bogus") y verificá que el email llegue.
+### 2 · Producto y entrega
+- Producto principal: "Pilates Lulú". Su entregable es un **link externo**: https://app-alumnas.vercel.app.
+- Impultienda manda solo el mail de entrega con el botón a ese link apenas se aprueba el pago. El texto de ese mail **no se edita**: lo arma la plataforma con el logo, el nombre y el color de la tienda.
+- El mail de bienvenida con las instrucciones está en [`entrega/mail-confirmacion-compra.md`](entrega/mail-confirmacion-compra.md).
+- Precio y precio tachado del producto en Impultienda tienen que coincidir con `brand.config.ts → pricing`.
 
-### 3 · Variant ID y dominio
-- Abrí `https://TIENDA.myshopify.com/products/<handle>.json` → `product.variants[0].id`. (O en el Admin: Producto → variante → el número al final de la URL.)
-- Poné el dominio **.myshopify.com** y el ID en `brand.config.ts → shopify`. Mientras tengan los valores de ejemplo, el botón muestra un aviso en lugar de redirigir.
+### 3 · Compra de prueba
+Hacé una compra de prueba y verificá que llegue el mail de entrega, que su botón abra la app y que la venta tenga las `utm_*`.
 
 ### 4 · Cuotas
 "3 cuotas sin interés" depende de tu medio de pago (p. ej. Mercado Pago con cuotas sin interés activadas). Confirmalo en tu pasarela; si no aplica, poné `installments: 0`.
@@ -232,7 +227,7 @@ Hacé una compra de prueba (modo de prueba de Shopify Payments o pasarela "Bogus
 | `quiz_step` (custom) | Cada paso visto: `step_number`, `step_name`, `step_id`, `variant` | Funnel (Pixel + CAPI) |
 | `Lead` | Una vez por sesión, al llegar al resultado | Funnel (Pixel + CAPI) |
 | `InitiateCheckout` | Al tocar "Quiero empezar mi reto" (`value`, `currency`, `content_ids`) | Funnel (Pixel + CAPI) |
-| `Purchase` | Pago confirmado | **Shopify** (app de Meta) |
+| `Purchase` | Pago confirmado | **Impultienda** (pixel de la tienda) |
 
 - Cada evento del funnel se manda por Pixel **y** CAPI con el **mismo `event_id`**: Meta los deduplica.
 - CAPI envía IP, user agent, `_fbp`, `_fbc` (o lo arma desde `fbclid`) y `external_id` (hash SHA-256 del ID de sesión).
@@ -244,16 +239,14 @@ Hacé una compra de prueba (modo de prueba de Shopify Payments o pasarela "Bogus
 3. Para probar: Events Manager → "Probar eventos" → copiá el código a `META_TEST_EVENT_CODE`. Borralo en producción.
 4. Verificá tu dominio en Business Manager → Configuración del negocio → Seguridad de la marca → Dominios.
 
-### App de Meta en Shopify (Purchase)
-1. Shopify Admin → **Apps → Facebook & Instagram** (canal oficial de Meta) → instalar.
-2. Conectá tu Business Manager, tu página y **el mismo dataset/Pixel** que usa el funnel.
-3. En **Configuración de uso compartido de datos**, elegí **Máximo** (Pixel + Conversions API). Shopify manda `Purchase` por ambas vías y lo deduplica solo.
-4. **No** agregues un Pixel manual en la página de gracias: duplicaría `Purchase`.
+### Pixel en Impultienda (Purchase)
+1. En Impultienda → Configuraciones → **Meta / Tracking**, cargá **el mismo ID de Pixel** que usa el funnel y su token de Conversions API.
+2. La tienda inserta el pixel sola en la landing, el checkout y las páginas posteriores a la compra. **No** pegues el código del pixel en el HTML de la landing: duplicaría eventos.
 
 ### Evitar duplicados de InitiateCheckout
-El cart permalink lleva directo al checkout, y la app de Meta en Shopify **también** manda `InitiateCheckout` al abrirlo, con su propio `event_id`. Resultado: puede contarse dos veces. Opciones:
-- Dejar `meta.sendInitiateCheckout: true` (pedido en el brief: el evento sale del funnel con la sesión y las UTM) y optimizar campañas por **Purchase**, no por InitiateCheckout.
-- O poner `sendInitiateCheckout: false` y usar solo el de Shopify.
+Si el checkout de Impultienda también manda `InitiateCheckout`, puede contarse dos veces. Opciones:
+- Dejar `meta.sendInitiateCheckout: true` y optimizar campañas por **Purchase**, no por InitiateCheckout.
+- O poner `sendInitiateCheckout: false` y usar solo el de la tienda.
 
 ---
 
@@ -294,11 +287,11 @@ Todas son originales, generadas con IA, y **solo ilustran**: nunca se presentan 
 
 ## Checklist antes de lanzar
 
-- [ ] `brand.config.ts`: dominio Shopify, variant ID, Pixel ID, email de soporte, `siteUrl`.
-- [ ] Precio y precio de comparación iguales en Shopify y en `brand.config.ts`.
+- [ ] `brand.config.ts`: link del checkout de Impultienda, Pixel ID, email de soporte, `siteUrl`.
+- [ ] Precio y precio tachado iguales en Impultienda y en `brand.config.ts`.
 - [ ] "Qué incluye" y bonos coinciden con el producto real.
-- [ ] Compra de prueba: llega el email de acceso y el pedido tiene los atributos `quiz_session` y `utm_*`.
-- [ ] Events Manager: PageView, quiz_step, Lead e InitiateCheckout aparecen como "Deduplicado" (navegador + servidor); Purchase llega desde Shopify.
+- [ ] Compra de prueba: llega el email de acceso, abre la app y la venta tiene las `utm_*`.
+- [ ] Events Manager: PageView, quiz_step, Lead e InitiateCheckout aparecen como "Deduplicado" (navegador + servidor); Purchase llega desde Impultienda.
 - [ ] Supabase: se crean filas en `quiz_sessions` / `quiz_events`.
 - [ ] `/opinion` guarda una reseña de prueba como `pending`.
 - [ ] `npm test` en verde.

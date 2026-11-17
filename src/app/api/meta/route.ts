@@ -4,7 +4,7 @@ import { brand } from "@/config/brand.config";
 
 /**
  * Conversions API de Meta. Recibe el mismo event_id que mandó el Pixel
- * para que Meta deduplique. Purchase NO pasa por acá: lo manda Shopify.
+ * para que Meta deduplique. Purchase NO pasa por acá: lo manda Impultienda desde el checkout.
  */
 const ALLOWED = new Set(["PageView", "quiz_step", "Lead", "InitiateCheckout"]);
 const sha256 = (s: string) => createHash("sha256").update(s.trim().toLowerCase()).digest("hex");
