@@ -68,7 +68,7 @@ export const brand = {
 
   meta: {
     /** ID del Meta Pixel / dataset. Vacío = el Pixel no se carga. */
-    pixelId: "",
+    pixelId: "1089968680039898",
     /** Versión de la Graph API para Conversions API. */
     graphApiVersion: "v21.0",
     /**
