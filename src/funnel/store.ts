@@ -24,6 +24,8 @@ type QuizState = {
   lastStepId: string | null;
   /** Eventos one-shot ya enviados (Lead, etc.). */
   sent: Record<string, boolean>;
+  /** Tildó sumar el plan adicional (upsell) en la oferta. */
+  bump: boolean;
 
   setAnswer: (stepId: string, value: AnswerValue) => void;
   setLastStep: (stepId: string) => void;
@@ -31,6 +33,7 @@ type QuizState = {
   setVariant: (stepId: string, variant: string) => void;
   mergeAttribution: (a: Attribution) => void;
   markSent: (key: string) => void;
+  setBump: (on: boolean) => void;
   reset: () => void;
 };
 
@@ -44,6 +47,7 @@ const initial = {
   attribution: {},
   lastStepId: null,
   sent: {},
+  bump: false,
 };
 
 export function newSessionId(): string {
@@ -63,6 +67,7 @@ export const useQuiz = create<QuizState>()(
       mergeAttribution: (a) =>
         set((s) => (Object.keys(a).length ? { attribution: { ...a } } : { attribution: s.attribution })),
       markSent: (key) => set((s) => ({ sent: { ...s.sent, [key]: true } })),
+      setBump: (bump) => set({ bump }),
       reset: () =>
         set({
           ...initial,
@@ -84,6 +89,7 @@ export const useQuiz = create<QuizState>()(
         attribution: s.attribution,
         lastStepId: s.lastStepId,
         sent: s.sent,
+        bump: s.bump,
       }),
     },
   ),

@@ -219,15 +219,36 @@ Impultienda manda su mail de entrega fijo. El mail de bienvenida propio (link a 
 3. En Vercel → Settings → Environment Variables (Production): `IMPULTIENDA_WEBHOOK_SECRET`, `RESEND_API_KEY`, `MAIL_FROM` y, opcional, `MAIL_REPLY_TO`. Después, **Redeploy**.
 4. En el endpoint del webhook tocá **Probar** con tu email: te llega el mail con el asunto marcado `[Prueba]`.
 
-- Solo sale para pagos confirmados de esta tienda que incluyan el producto principal (`brand.config.ts → impultienda.mainProductId`); los upsells post-compra no lo disparan.
+- Sale para pagos confirmados de esta tienda que incluyan el producto principal (`brand.config.ts → impultienda.mainProductId`). Si la compra trae además el upsell, el mismo mail suma el botón y el código para activarlo (ver "Upsell").
+- Una compra que trae solo el upsell (post-compra o con su link propio) recibe un mail corto con el código de activación.
 - Si falta alguna variable o Resend falla, la ruta responde 503/502 e Impultienda reintenta durante ~32 h: las ventas de ese rato reciben el mail cuando se arregla.
 - Los reintentos no duplican el mail: cada aviso se manda a Resend con una clave de idempotencia.
 - El texto está en `src/lib/impultienda/welcome-email.ts` (fuente: `entrega/mail-confirmacion-compra.md`).
 
-### 4 · Compra de prueba
+### 4 · Upsell: Rejuvenecé después de los 50 ($5.900)
+El plan "Rejuvenecé después de los 50" de la app de alumnas es un producto aparte. Se ofrece como **order bump**: en la oferta del quiz (tarjeta "Sumalo a tu plan" debajo del precio) y otra vez dentro del checkout. En la app queda con candado hasta que la alumna lo activa con un código que le llega por mail.
+
+Cómo viaja:
+1. En el quiz la alumna tilda la tarjeta → el botón abre el checkout con `?upsells=<posición>` y el upsell ya agregado (lo puede destildar). Si no la tildó, el checkout igual se lo ofrece.
+2. Impultienda cobra los dos productos en la misma orden y avisa al webhook con los dos `product_id`.
+3. El webhook calcula un código con el email de la compradora (`src/lib/activation.ts`, HMAC con `ACTIVATION_SECRET`) y lo manda en el mail de bienvenida, con un botón que lo activa solo.
+4. La app verifica el código en su servidor (`app-alumnas/src/app/api/activar`) con el mismo secreto y desbloquea el plan en ese dispositivo. No hace falta base de datos.
+
+Para prenderlo, en este orden:
+1. Generá un secreto (`openssl rand -hex 32`) y cargalo como `ACTIVATION_SECRET` en **los dos** proyectos de Vercel (landing y app de alumnas). Redeploy de los dos.
+2. En Impultienda → **Diseño de ebooks**: creá el upsell "Rejuvenecé después de los 50" a $5.900, con **«Disponible solo en post-compra» prendido** por ahora, así no aparece en el checkout antes de tiempo. Entregable: **link externo** `https://app-alumnas.vercel.app/activar`.
+3. Copiá su ID en `brand.config.ts → upsell.productId` y revisá `upsell.checkoutPosition` (1 si es el único upsell). Deploy.
+4. Apagá «Disponible solo en post-compra»: desde ahí aparece como bump en el checkout y en el quiz.
+5. Hacé una compra de prueba con el bump tildado: tiene que llegar el mail de bienvenida con "ACTIVAR MI PLAN" y el código, y el botón tiene que desbloquear el plan.
+
+Con `upsell.productId` vacío la tarjeta no se muestra y el webhook no activa nada.
+
+> El candado es del lado del navegador: alcanza para que el plan no se vea sin comprarlo, pero alguien con conocimientos técnicos podría saltearlo, y los videos siguen siendo públicos en YouTube. Para un control real hacen falta cuentas con inicio de sesión.
+
+### 5 · Compra de prueba
 Hacé una compra de prueba y verificá que llegue el mail de entrega, que su botón abra la app y que la venta tenga las `utm_*`.
 
-### 4 · Cuotas
+### 6 · Cuotas
 "3 cuotas sin interés" depende de tu medio de pago (p. ej. Mercado Pago con cuotas sin interés activadas). Confirmalo en tu pasarela; si no aplica, poné `installments: 0`.
 
 ---

@@ -19,6 +19,11 @@ export type CheckoutParams = {
   /** URL completa del checkout de la tienda. */
   checkoutUrl: string;
   attribution: Attribution;
+  /**
+   * Upsells que llegan tildados al checkout, por su posición en la tienda (1 = el primero): ?upsells=1,2.
+   * El checkout los sigue mostrando y la compradora los puede destildar.
+   */
+  upsells?: number[];
 };
 
 export function buildCheckoutUrl(p: CheckoutParams): string {
@@ -28,6 +33,8 @@ export function buildCheckoutUrl(p: CheckoutParams): string {
     if (v) url.searchParams.set(k, v);
   }
   if (p.attribution.fbclid) url.searchParams.set("fbclid", p.attribution.fbclid);
+  const ups = (p.upsells ?? []).filter((n) => Number.isInteger(n) && n > 0);
+  if (ups.length) url.searchParams.set("upsells", ups.join(","));
   return url.toString();
 }
 

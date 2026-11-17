@@ -1,7 +1,8 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { brand } from "@/config/brand.config";
-import { parsePayload, verifySignature, welcomeRecipient } from "@/lib/impultienda/webhook";
-import { welcomeEmail } from "@/lib/impultienda/welcome-email";
+import { activationCode } from "@/lib/activation";
+import { orderAccess, parsePayload, verifySignature } from "@/lib/impultienda/webhook";
+import { addonEmail, welcomeEmail, type Activation } from "@/lib/impultienda/welcome-email";
 import { sendWithResend } from "@/lib/impultienda/send-email";
 
 export const runtime = "nodejs";
@@ -11,7 +12,9 @@ const json = (status: number, body: Record<string, unknown>) => NextResponse.jso
 
 /**
  * Webhook de Impultienda (Configuraciones → Webhooks, evento «Pago confirmado»).
- * Con cada compra del reto le manda a la compradora el mail de bienvenida.
+ * - Compra del reto (con o sin el order bump): mail de bienvenida. Si sumó el upsell, el mail trae
+ *   el código para activar ese plan en la app de alumnas.
+ * - Compra solo del upsell (post-compra o con su link propio): mail con el código de activación.
  *
  * Códigos de respuesta (Impultienda reintenta todo lo que no sea 2xx, salvo 4xx):
  * - 200: procesado, o ignorado a propósito (otro evento, otra tienda, otro producto).
@@ -40,11 +43,19 @@ export async function POST(req: NextRequest) {
   const payload = parsePayload(raw);
   if (!payload) return json(400, { ok: false, reason: "bad_payload" });
 
-  const to = welcomeRecipient(payload, {
+  const upsell = brand.upsell;
+  const to = orderAccess(payload, {
     storeId: brand.impultienda.storeId,
     mainProductId: brand.impultienda.mainProductId,
+    addons: upsell.productId ? [{ productId: upsell.productId, planId: upsell.planId }] : [],
   });
   if ("skip" in to) return json(200, { ok: false, reason: to.skip });
+
+  const activationSecret = process.env.ACTIVATION_SECRET;
+  if (to.addonPlans.length && !activationSecret) {
+    console.error("impultienda webhook: falta ACTIVATION_SECRET para el plan adicional");
+    return json(503, { ok: false, reason: "activation_not_configured" });
+  }
 
   const apiKey = process.env.RESEND_API_KEY;
   const from = process.env.MAIL_FROM;
@@ -53,13 +64,21 @@ export async function POST(req: NextRequest) {
     return json(503, { ok: false, reason: "mail_not_configured" });
   }
 
-  const mail = welcomeEmail({
+  const activations: Activation[] = to.addonPlans.map((planId) => {
+    const code = activationCode(to.email, planId, activationSecret!);
+    const hash = new URLSearchParams({ plan: planId, email: to.email, codigo: code }).toString();
+    return { planName: planId === upsell.planId ? upsell.name : planId, code, url: `${brand.appUrl}/activar#${hash}` };
+  });
+
+  const common = {
     firstName: to.firstName,
     email: to.email,
     appUrl: brand.appUrl,
     logoUrl: `${brand.siteUrl}/email/logo.png`,
     test: payload.test === true,
-  });
+  };
+  const mail = to.main ? welcomeEmail({ ...common, activations }) : addonEmail({ ...common, activations });
+  const kind = to.main ? "welcome" : "addon";
 
   const sent = await sendWithResend({
     apiKey,
@@ -69,7 +88,7 @@ export async function POST(req: NextRequest) {
     subject: mail.subject,
     html: mail.html,
     text: mail.text,
-    idempotencyKey: `impultienda-welcome-${payload.id}`,
+    idempotencyKey: `impultienda-${kind}-${payload.id}`,
   }).catch((e: unknown) => ({ ok: false as const, status: 0, error: e instanceof Error ? e.message : String(e) }));
 
   if (!sent.ok) {

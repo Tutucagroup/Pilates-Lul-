@@ -52,6 +52,27 @@ export const brand = {
     days: 7,
   },
 
+  /**
+   * Upsell: plan adicional "Rejuvenecé después de los 50" (order bump en el checkout de Impultienda).
+   * Con productId vacío no se ofrece en el quiz y el webhook no lo activa.
+   */
+  upsell: {
+    /** ID del producto upsell en Impultienda (sale de Diseño de ebooks o de impultienda_listar_productos). */
+    productId: "",
+    /**
+     * Posición del upsell entre los upsells de la tienda (1 = el primero). El link del checkout lo lleva
+     * tildado con ?upsells=<posición>. Si sumás otro upsell antes que este, actualizá el número.
+     */
+    checkoutPosition: 1,
+    /** ID del plan en la app de alumnas (app-alumnas/src/data/program.ts). */
+    planId: "rejuvenece",
+    name: "Rejuvenecé después de los 50",
+    tagline: "Quema grasa y tonifica todo el cuerpo",
+    classes: 20,
+    /** Tiene que coincidir con el precio del upsell en Impultienda. */
+    price: 5900,
+  },
+
   impultienda: {
     /** Link al checkout de la tienda de Impultienda (el botón de compra del quiz lleva acá). */
     checkoutUrl: "https://pilates-lulu.impultienda.ar/checkout",

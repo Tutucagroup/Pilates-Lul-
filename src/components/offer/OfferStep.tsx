@@ -8,6 +8,7 @@ import { Faq } from "./Faq";
 import { PriceBox } from "./PriceBox";
 import { ReviewList } from "./ReviewList";
 import { TestimonialCarousel } from "./TestimonialCarousel";
+import { UpsellBump } from "./UpsellBump";
 import { Urgency } from "./Urgency";
 
 type Props = { summary: PlanSummary; hydrated: boolean; stepIndex: number; stepName: string };
@@ -79,6 +80,7 @@ export function OfferStepView({ summary, hydrated, stepIndex, stepName }: Props)
       <section id="comprar" aria-label="Precio" className="mt-10 scroll-mt-20">
         <Urgency />
         <PriceBox />
+        <UpsellBump />
         <div className="mt-4">{buy("top", o.cta)}</div>
         <p className="mt-2 text-center text-[14px] text-muted">{o.checkoutNote}</p>
       </section>
@@ -122,6 +124,7 @@ export function OfferStepView({ summary, hydrated, stepIndex, stepName }: Props)
       {/* Segundo botón */}
       <section aria-label="Comprar" className="mt-10">
         <PriceBox />
+        <UpsellBump />
         <div className="mt-4">{buy("bottom", o.ctaSecondary)}</div>
       </section>
 

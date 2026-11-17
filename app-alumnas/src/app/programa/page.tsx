@@ -3,12 +3,13 @@ import Link from "next/link";
 import { useState } from "react";
 import { Check, Clock, Lock, Play } from "lucide-react";
 import { Chip, LinkButton, PageTitle, Ring } from "@/components/ui";
-import { plans, weekOf } from "@/data/program";
+import { canUsePlan, plans, weekOf } from "@/data/program";
 import { currentDay, doneCount, isUnlocked, useActivePlan, useApp } from "@/lib/store";
 
 export default function Programa() {
   const { plan, done: completions } = useActivePlan();
   const setActivePlan = useApp((s) => s.setActivePlan);
+  const owned = useApp((s) => s.owned);
   const total = plan.classes.length;
   const done = doneCount(completions);
   const day = currentDay(plan, completions);
@@ -24,6 +25,22 @@ export default function Programa() {
       <div className="mb-4 space-y-2" role="group" aria-label="Elegí un plan">
         {plans.map((p) => {
           const active = p.id === plan.id;
+          if (!canUsePlan(p, owned)) {
+            return (
+              <Link
+                key={p.id}
+                href="/activar"
+                className="flex w-full items-center gap-3 rounded-2xl bg-surface p-3.5 text-left ring-1 ring-line"
+              >
+                <span className="min-w-0 flex-1">
+                  <span className="block font-bold leading-snug">{p.name}</span>
+                  <span className="block text-[14.5px] text-muted">{p.subtitle} · {p.classes.length} clases</span>
+                  <span className="mt-1 block text-[14px] font-bold text-brand">Plan adicional · Activalo con el código de tu mail</span>
+                </span>
+                <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-brand-soft text-brand"><Lock size={16} /></span>
+              </Link>
+            );
+          }
           return (
             <button
               key={p.id}

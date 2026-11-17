@@ -1,7 +1,7 @@
 "use client";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { DEFAULT_PLAN, getPlan, type Plan } from "@/data/program";
+import { DEFAULT_PLAN, canUsePlan, getPlan, type Plan } from "@/data/program";
 import { dateKey } from "./dates";
 import type { Diet } from "./mealplan";
 
@@ -27,6 +27,10 @@ type State = {
   theme: "light" | "dark";
   chat: ChatMessage[];
   coachUse: { date: string; n: number };
+  /** Planes adicionales activados en este dispositivo con su código. */
+  owned: string[];
+  /** Email con el que se activó (para mostrarlo y precargar el formulario). */
+  activationEmail: string | null;
 
   setProfile: (p: Profile) => void;
   setActivePlan: (id: string) => void;
@@ -43,6 +47,7 @@ type State = {
   countCoachUse: () => void;
   restartProgram: (plan: string) => void;
   resetAll: () => void;
+  unlockPlan: (planId: string, email: string) => void;
 };
 
 export const useApp = create<State>()(
@@ -58,6 +63,8 @@ export const useApp = create<State>()(
       theme: "light",
       chat: [],
       coachUse: { date: "", n: 0 },
+      owned: [],
+      activationEmail: null,
 
       setProfile: (profile) => set({ profile }),
       setActivePlan: (activePlan) => set({ activePlan }),
@@ -95,16 +102,20 @@ export const useApp = create<State>()(
           return { coachUse: { date: today, n: s.coachUse.date === today ? s.coachUse.n + 1 : 1 } };
         }),
       restartProgram: (plan) => set((s) => ({ completions: { ...s.completions, [plan]: {} }, swaps: {} })),
+      unlockPlan: (planId, email) =>
+        set((s) => ({ owned: s.owned.includes(planId) ? s.owned : [...s.owned, planId], activationEmail: email })),
+      // Borrar los datos no quita los planes comprados: se conservan owned y activationEmail.
       resetAll: () =>
         set({ profile: null, activePlan: DEFAULT_PLAN, completions: {}, energy: {}, weights: [], favorites: [], swaps: {}, chat: [], coachUse: { date: "", n: 0 } }),
     }),
     {
       name: "pilates-lulu-app-v1",
-      version: 2,
-      // v1 guardaba las clases hechas de un solo plan.
+      version: 3,
+      // v1 guardaba las clases hechas de un solo plan. v3 suma los planes adicionales activados.
       migrate: (old, version) => {
-        const state = old as Record<string, unknown>;
-        if (version < 2) return { ...state, activePlan: DEFAULT_PLAN, completions: { [DEFAULT_PLAN]: state.completions ?? {} } };
+        let state = old as Record<string, unknown>;
+        if (version < 2) state = { ...state, activePlan: DEFAULT_PLAN, completions: { [DEFAULT_PLAN]: state.completions ?? {} } };
+        if (version < 3) state = { ...state, owned: [], activationEmail: null };
         return state;
       },
     },
@@ -116,7 +127,10 @@ const EMPTY: Done = {};
 
 /** Plan activo y sus clases hechas. */
 export function useActivePlan(): { plan: Plan; done: Done } {
-  const id = useApp((s) => s.activePlan);
+  const picked = useApp((s) => s.activePlan);
+  const owned = useApp((s) => s.owned);
+  // Un plan adicional sin activar no se muestra: se vuelve al plan principal.
+  const id = canUsePlan(getPlan(picked), owned) ? picked : DEFAULT_PLAN;
   const done = useApp((s) => s.completions[id] ?? EMPTY);
   return { plan: getPlan(id), done };
 }

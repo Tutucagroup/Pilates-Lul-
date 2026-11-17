@@ -8,7 +8,7 @@
 
 ¡Hola, {nombre}!
 
-**Tu compra se confirmó con éxito.** ¡Gracias por sumarte al Reto de 28 días de Pilates Asiático! Desde hoy formás parte de la comunidad de Pilates Lulú y estamos muy felices de acompañarte.
+**Tu compra se confirmó con éxito.** ¡Gracias por sumarte al Reto de 28 días de Pilates Asiático{ y a Rejuvenecé después de los 50, si sumó el upsell}! Desde hoy formás parte de la comunidad de Pilates Lulú y estamos muy felices de acompañarte.
 
 ## 👉 Tu acceso
 
@@ -27,6 +27,18 @@ Adentro vas a encontrar:
 - Tu plan de comidas con recetas simples.
 - Tu progreso y tu racha de días.
 - Una coach virtual para resolver tus dudas.
+
+<!-- Solo si la compra incluye el upsell (order bump). Lo arma el webhook con el código de esa compradora. -->
+
+## 🔓 Tu plan Rejuvenecé después de los 50
+
+Este plan se activa **una sola vez** en cada celular o compu donde uses la app. Tocá el botón y queda listo:
+
+**[ACTIVAR MI PLAN](https://app-alumnas.vercel.app/activar#plan=rejuvenece&email={email}&codigo={codigo})**
+
+> Si usás la app instalada en el celular (el ícono de la pantalla de inicio), activalo desde adentro: **Programa → Rejuvenecé después de los 50**, y escribí tu email ({email}) y este código: **{codigo}**
+
+<!-- Fin del bloque del upsell. -->
 
 ## 📲 Tené tu app en el celular (como cualquier otra app)
 
