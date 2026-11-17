@@ -2,23 +2,23 @@
 import { useState } from "react";
 import { brand } from "@/config/brand.config";
 import { useQuiz } from "@/funnel/store";
-import { buildCartUrl } from "@/lib/checkout";
+import { buildCheckoutUrl } from "@/lib/checkout";
 import { price } from "@/lib/pricing";
 import { logQuizEvent, newEventId, trackMeta } from "@/lib/tracking/client";
 import { Button } from "../ui/Button";
 
-const configured = !brand.shopify.domain.startsWith("TIENDA") && !/^0+$/.test(brand.shopify.variantId);
+const configured = /^https:\/\//.test(brand.impultienda.checkoutUrl);
 
 type Props = { label: string; level: string; stepIndex: number; stepName: string; position: "top" | "bottom" };
 
-/** Botón de compra: InitiateCheckout (Pixel + CAPI, mismo event_id) y redirección al cart permalink de Shopify. */
+/** Botón de compra: InitiateCheckout (Pixel + CAPI, mismo event_id) y redirección al checkout de Impultienda. */
 export function BuyButton({ label, level, stepIndex, stepName, position }: Props) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const buy = () => {
     if (!configured) {
-      setError("Falta configurar el dominio y el variant ID de Shopify en brand.config.ts.");
+      setError("Falta configurar el link del checkout de Impultienda en brand.config.ts.");
       return;
     }
     setBusy(true);
@@ -27,19 +27,14 @@ export function BuyButton({ label, level, stepIndex, stepName, position }: Props
     if (brand.meta.sendInitiateCheckout) {
       trackMeta(
         "InitiateCheckout",
-        { value: price.offer, currency: price.currency, content_ids: [brand.shopify.variantId], content_type: "product", num_items: 1 },
+        { value: price.offer, currency: price.currency, content_ids: [brand.impultienda.productId], content_type: "product", num_items: 1 },
         eventId,
       );
     }
-    logQuizEvent({ event: "checkout", stepId: "oferta", stepIndex, stepName, value: { position, eventId } });
-    window.location.href = buildCartUrl({
-      domain: brand.shopify.domain,
-      variantId: brand.shopify.variantId,
-      sessionId: s.sessionId,
+    logQuizEvent({ event: "checkout", stepId: "oferta", stepIndex, stepName, value: { position, eventId, level } });
+    window.location.href = buildCheckoutUrl({
+      checkoutUrl: brand.impultienda.checkoutUrl,
       attribution: s.attribution,
-      checkoutEventId: eventId,
-      variants: s.variants,
-      level,
     });
   };
 
