@@ -7,6 +7,8 @@ Funnel tipo cuestionario para el **Reto de 28 días de Pilates Asiático** (muje
 
 Next.js 15 (App Router) · TypeScript · Tailwind 4 · Zustand · Supabase · Meta Pixel + Conversions API · Vercel.
 
+> La **app de alumnas** (el producto que se entrega tras la compra) es un proyecto aparte: está en [`app-alumnas/`](app-alumnas/README.md) y se publica como otro proyecto de Vercel.
+
 ---
 
 ## Arranque rápido

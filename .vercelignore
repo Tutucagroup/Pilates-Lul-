@@ -1,3 +1,5 @@
 # Material privado o de trabajo: no se sube a Vercel.
 research/
 creatives/
+# La app de alumnas es otro proyecto de Vercel (Root Directory: app-alumnas).
+app-alumnas/
