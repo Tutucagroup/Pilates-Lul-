@@ -67,7 +67,7 @@ export const brand = {
      * post-compra» apagado). Mientras sea false, el quiz no muestra la tarjeta para sumarlo, porque el
      * checkout no lo cobraría; el webhook igual lo activa si se compra por su link propio.
      */
-    inCheckout: false,
+    inCheckout: true,
     /**
      * Posición del upsell entre los upsells de la tienda (1 = el primero). El link del checkout lo lleva
      * tildado con ?upsells=<posición>. Si sumás otro upsell antes que este, actualizá el número.
