@@ -37,7 +37,7 @@ export default function Programa() {
                   <span className="block font-bold leading-snug">{p.name}</span>
                   <span className="block text-[14.5px] text-muted">{p.subtitle} · {p.classes.length} clases</span>
                   <span className="mt-1 block text-[14px] font-bold text-brand">
-                    Plan adicional · {p.addon?.buyUrl ? `Sumalo por ${money(p.addon.price)} o activalo` : "Activalo con el código de tu mail"}
+                    Plan adicional · {p.addon?.buyUrl ? `Sumalo por ${money(p.addon.price)} o activalo` : "Activalo con tu email de compra"}
                   </span>
                 </span>
                 <span className="flex size-8 shrink-0 items-center justify-center rounded-full bg-brand-soft text-brand"><Lock size={16} /></span>

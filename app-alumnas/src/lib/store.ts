@@ -27,7 +27,7 @@ type State = {
   theme: "light" | "dark";
   chat: ChatMessage[];
   coachUse: { date: string; n: number };
-  /** Planes adicionales activados en este dispositivo con su código. */
+  /** Planes adicionales activados en este dispositivo con el email de compra. */
   owned: string[];
   /** Email con el que se activó (para mostrarlo y precargar el formulario). */
   activationEmail: string | null;

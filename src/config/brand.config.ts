@@ -36,6 +36,8 @@ export const brand = {
     name: "Reto de 28 días",
     days: 28,
     minutesPerDay: 15,
+    /** ID del plan del reto en la app de alumnas (app-alumnas/src/data/program.ts). */
+    appPlanId: "pilates28",
   },
 
   pricing: {

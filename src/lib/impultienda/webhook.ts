@@ -75,8 +75,8 @@ export type OrderAccess = {
 
 /**
  * Decide qué habilita esta venta y a quién se le avisa.
- * - Con el principal (con o sin order bump): mail de bienvenida, con el código del plan adicional si lo sumó.
- * - Solo un upsell (post-compra, que llega en un aviso aparte, o comprado con su link propio): mail de activación.
+ * - Con el principal (con o sin order bump): se anota el reto (y el plan adicional si lo sumó) y, si hay proveedor de mails, sale la bienvenida.
+ * - Solo un upsell (post-compra, que llega en un aviso aparte, o comprado con su link propio): se anota ese plan.
  */
 export function orderAccess(p: WebhookPayload, cfg: AccessConfig): OrderAccess | { skip: string } {
   if (p.event !== "order.approved") return { skip: "event_not_handled" };

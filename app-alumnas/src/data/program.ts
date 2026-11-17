@@ -29,7 +29,7 @@ export type Plan = {
   perWeek: number;
   /**
    * Plan adicional que se vende aparte (upsell en Impultienda). Queda bloqueado hasta que la alumna
-   * lo activa con el código que le llega por mail (pantalla /activar).
+   * lo activa con su email de compra (pantalla /activar).
    */
   addon?: {
     /** Precio en pesos. Tiene que coincidir con el del upsell en Impultienda. */

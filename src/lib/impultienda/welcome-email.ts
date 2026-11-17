@@ -24,9 +24,7 @@ export function escapeHtml(s: string): string {
 export type Activation = {
   /** Nombre del plan adicional, p. ej. "Rejuvenecé después de los 50". */
   planName: string;
-  /** Código "ABCD-EFGH" (ver src/lib/activation.ts). */
-  code: string;
-  /** Link que activa el plan en la app con un toque (lleva email y código después del #). */
+  /** Link a la pantalla de activación de la app, con el email ya escrito (va después del #). */
   url: string;
 };
 
@@ -64,14 +62,14 @@ const box = (html: string) =>
   </table>`;
 
 
-/** Bloque del mail con el botón y el código para activar un plan adicional. */
+/** Bloque del mail con el botón para activar un plan adicional. */
 function activationBlock(a: Activation, email: string): string {
   return [
     h2(`🔓 Tu plan ${escapeHtml(a.planName)}`),
-    p("Este plan se activa <strong>una sola vez</strong> en cada celular o compu donde uses la app. Tocá el botón y queda listo:"),
+    p("Este plan se activa <strong>una sola vez</strong> en cada celular o compu donde uses la app. Tocá el botón y confirmá tu email:"),
     button("ACTIVAR MI PLAN", a.url),
     box(
-      `Si usás la app instalada en el celular (el ícono de la pantalla de inicio), activalo desde adentro: <strong>Programa → ${escapeHtml(a.planName)}</strong>, y escribí tu email (${escapeHtml(email)}) y este código:<br><span style="display:inline-block;margin-top:8px;font:700 22px/1.2 ui-monospace,Menlo,Consolas,monospace;letter-spacing:3px;">${escapeHtml(a.code)}</span>`,
+      `Si usás la app instalada en el celular (el ícono de la pantalla de inicio), activalo desde adentro: <strong>Programa → ${escapeHtml(a.planName)}</strong>, y escribí el email con el que compraste: <strong>${escapeHtml(email)}</strong>.`,
     ),
   ].join("\n");
 }
@@ -79,7 +77,7 @@ function activationBlock(a: Activation, email: string): string {
 function activationText(a: Activation, email: string): string {
   return `TU PLAN ${a.planName.toUpperCase()}
 Activalo una sola vez en cada celular o compu donde uses la app: ${a.url}
-Si usás la app instalada en el celular: Programa > ${a.planName}, y escribí tu email (${email}) y este código: ${a.code}
+Si usás la app instalada en el celular: Programa > ${a.planName}, y escribí el email con el que compraste (${email}).
 
 `;
 }

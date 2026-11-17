@@ -10,7 +10,7 @@ Next.js 15 · TypeScript · Tailwind 4 · Zustand · API de Anthropic (coach).
 
 1. En Vercel: **Add New → Project** y elegí este mismo repositorio de GitHub.
 2. En **Root Directory** poné `app-alumnas`. El resto se detecta solo (Next.js).
-3. En **Environment Variables** cargá `ANTHROPIC_API_KEY` (ver "Coach virtual") y `ACTIVATION_SECRET` (ver "Plan adicional").
+3. En **Environment Variables** cargá `ANTHROPIC_API_KEY` (ver "Coach virtual") y conectá el almacenamiento `pilates-lulu-accesos` (Storage) más `ACTIVATION_SECRET` (ver "Plan adicional").
 4. **Deploy**. Vercel te da una dirección nueva, distinta de la landing.
 
 Cada vez que se suben cambios a la rama de producción, Vercel vuelve a publicar solo.
@@ -46,10 +46,10 @@ Los videos se reproducen con el reproductor de YouTube: si un video se borra, se
 "Rejuvenecé después de los 50" se vende aparte, como upsell de $5.900 en el checkout de Impultienda. En `src/data/program.ts` está marcado con `addon: true`: aparece con candado en **Programa** hasta que se activa.
 
 - Quien no lo compró en el checkout lo puede comprar desde la app: en `/activar` aparece "Sumalo por $5.900", que abre el link de compra propio del upsell (`src/data/program.ts → rejuvenece.addon.buyUrl`; se copia en Impultienda → Diseño de ebooks → tarjeta del upsell → «Copiar link de compra»). Vacío = el botón no se muestra.
-- Quien lo compra recibe un mail con un botón que abre `/activar` y lo activa solo, y un código `ABCD-EFGH` para escribir a mano junto con su email. El código a mano hace falta en la app instalada del iPhone, que no comparte lo guardado en Safari.
-- `/api/activar` verifica el código con `ACTIVATION_SECRET`, que tiene que ser **el mismo valor** que en el proyecto de la landing (ahí lo calcula el webhook de Impultienda). Hay un tope de 15 intentos fallidos por hora por IP.
+- Quien lo compra lo activa en `/activar` escribiendo el email con el que pagó. El mail de entrega de Impultienda del upsell trae el link a esa pantalla.
+- `/api/activar` consulta si ese email compró el plan en Vercel Blob (almacenamiento privado `pilates-lulu-accesos`), donde lo anota el webhook de la landing. Necesita `BLOB_READ_WRITE_TOKEN` (lo carga Vercel al conectar el almacenamiento) y `ACTIVATION_SECRET`, **el mismo valor** que en la landing. Hay un tope de 15 intentos fallidos por hora por IP.
 - La activación queda guardada en ese dispositivo: en otro celular se activa de nuevo con el mismo mail. "Borrar todos mis datos" no la quita.
-- `src/lib/activation.ts` está copiado igual en la landing (`src/lib/activation.ts`): si cambiás uno, cambiá el otro.
+- `src/lib/entitlements.ts` está copiado igual en la landing (`src/lib/entitlements.ts`): si cambiás uno, cambiá el otro.
 
 ## Coach virtual
 
@@ -62,7 +62,7 @@ El chat llama a `/api/coach`, que usa la API de Anthropic desde el servidor.
 
 ## Limitaciones actuales
 
-- **No hay cuentas ni control de acceso.** Cualquiera que tenga la dirección puede entrar al reto de 28 días. El plan adicional se desbloquea con un código, pero el candado vive en el navegador: alguien con conocimientos técnicos podría saltearlo. Para que solo entren quienes compraron hace falta sumar inicio de sesión y enlazarlo con la compra.
+- **No hay cuentas ni control de acceso.** Cualquiera que tenga la dirección puede entrar al reto de 28 días. El plan adicional se desbloquea con el email de compra, pero cualquiera que sepa ese email podría activarlo, y el candado vive en el navegador: alguien con conocimientos técnicos podría saltearlo. Para que solo entren quienes compraron hace falta sumar inicio de sesión y enlazarlo con la compra.
 - **El progreso se guarda en el dispositivo** (almacenamiento del navegador). No se sincroniza entre celulares y se pierde si se borran los datos del navegador.
 - **Los videos son públicos en YouTube.** Cualquiera puede verlos gratis en el canal, sin pasar por la app.
 

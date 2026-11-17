@@ -1,6 +1,6 @@
 import { createHmac } from "node:crypto";
 import { describe, expect, it } from "vitest";
-import { activationCode, checkActivationCode } from "../activation";
+import { emailKey } from "../entitlements";
 import { orderAccess, parsePayload, verifySignature, type WebhookPayload } from "../impultienda/webhook";
 import { addonEmail, escapeHtml, welcomeEmail } from "../impultienda/welcome-email";
 
@@ -83,23 +83,17 @@ describe("orderAccess", () => {
   });
 });
 
-describe("activationCode", () => {
-  it("da siempre el mismo código para el mismo email, sin importar mayúsculas ni espacios", () => {
-    const c = activationCode("Ana@Example.com ", "rejuvenece", "s1");
-    expect(c).toMatch(/^[A-HJ-NP-Z2-9]{4}-[A-HJ-NP-Z2-9]{4}$/);
-    expect(activationCode("ana@example.com", "rejuvenece", "s1")).toBe(c);
+describe("emailKey", () => {
+  it("es el mismo para el mismo email, sin importar mayúsculas ni espacios", () => {
+    const k = emailKey("Ana@Example.com ", "s1");
+    expect(k).toMatch(/^[0-9a-f]{40}$/);
+    expect(emailKey("ana@example.com", "s1")).toBe(k);
   });
-  it("cambia con el email, el plan y el secreto", () => {
-    const c = activationCode("ana@example.com", "rejuvenece", "s1");
-    expect(activationCode("eva@example.com", "rejuvenece", "s1")).not.toBe(c);
-    expect(activationCode("ana@example.com", "otro", "s1")).not.toBe(c);
-    expect(activationCode("ana@example.com", "rejuvenece", "s2")).not.toBe(c);
-  });
-  it("acepta el código escrito a mano (minúsculas, sin guion) y rechaza otro", () => {
-    const c = activationCode("ana@example.com", "rejuvenece", "s1");
-    expect(checkActivationCode("ana@example.com", "rejuvenece", c.toLowerCase().replace("-", " "), "s1")).toBe(true);
-    expect(checkActivationCode("eva@example.com", "rejuvenece", c, "s1")).toBe(false);
-    expect(checkActivationCode("ana@example.com", "rejuvenece", "", "s1")).toBe(false);
+  it("cambia con el email y con el secreto, y no contiene el email", () => {
+    const k = emailKey("ana@example.com", "s1");
+    expect(emailKey("eva@example.com", "s1")).not.toBe(k);
+    expect(emailKey("ana@example.com", "s2")).not.toBe(k);
+    expect(k).not.toContain("ana");
   });
 });
 
@@ -123,23 +117,23 @@ describe("welcomeEmail", () => {
     expect(m.html).not.toContain("<script>");
     expect(m.html).toContain(escapeHtml("<script>"));
   });
-  it("con el order bump suma el botón y el código del plan adicional", () => {
-    const act = { planName: "Rejuvenecé después de los 50", code: "ABCD-EFGH", url: "https://app.test/activar#codigo=ABCD-EFGH" };
+  it("con el order bump suma el botón para activar el plan adicional", () => {
+    const act = { planName: "Rejuvenecé después de los 50", url: "https://app.test/activar#plan=rejuvenece" };
     const m = welcomeEmail({ ...base, activations: [act] });
     expect(m.html).toContain("y a Rejuvenecé después de los 50");
-    expect(m.html).toContain('href="https://app.test/activar#codigo=ABCD-EFGH"');
-    expect(m.html).toContain("ABCD-EFGH");
-    expect(m.text).toContain("ABCD-EFGH");
+    expect(m.html).toContain('href="https://app.test/activar#plan=rejuvenece"');
+    expect(m.html).toContain("ACTIVAR MI PLAN");
+    expect(m.text).toContain("https://app.test/activar#plan=rejuvenece");
     expect(welcomeEmail(base).html).not.toContain("ACTIVAR MI PLAN");
   });
 });
 
 describe("addonEmail", () => {
   it("activa el plan adicional comprado solo", () => {
-    const act = { planName: "Rejuvenecé después de los 50", code: "ABCD-EFGH", url: "https://app.test/activar#x" };
+    const act = { planName: "Rejuvenecé después de los 50", url: "https://app.test/activar#x" };
     const m = addonEmail({ firstName: "Ana", email: "ana@example.com", appUrl: "https://app.test", logoUrl: "https://x.test/l.png", activations: [act] });
     expect(m.subject).toBe("Sumaste Rejuvenecé después de los 50 🌸 Activalo en tu app");
-    expect(m.html).toContain("ABCD-EFGH");
+    expect(m.html).toContain("ana@example.com");
     expect(m.html).toContain('href="https://app.test/activar#x"');
   });
 });
