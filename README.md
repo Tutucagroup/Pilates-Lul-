@@ -211,7 +211,20 @@ La landing de la tienda es una página corta con el botón **"Hacer el test grat
 - El mail de bienvenida con las instrucciones está en [`entrega/mail-confirmacion-compra.md`](entrega/mail-confirmacion-compra.md).
 - Precio y precio tachado del producto en Impultienda tienen que coincidir con `brand.config.ts → pricing`.
 
-### 3 · Compra de prueba
+### 3 · Mail de bienvenida (webhook)
+Impultienda manda su mail de entrega fijo. El mail de bienvenida propio (link a la app, cómo instalarla en el celular y texto motivacional) lo manda el funnel:
+
+1. Impultienda → Configuraciones → **Webhooks** → **Agregar endpoint**: URL `https://pilates-lul.vercel.app/api/impultienda/webhook`, tienda **Pilates Lulú**, evento **Pago confirmado**. Copiá la **clave de firma**.
+2. En [Resend](https://resend.com): verificá tu dominio (Domains) y creá una API key.
+3. En Vercel → Settings → Environment Variables (Production): `IMPULTIENDA_WEBHOOK_SECRET`, `RESEND_API_KEY`, `MAIL_FROM` y, opcional, `MAIL_REPLY_TO`. Después, **Redeploy**.
+4. En el endpoint del webhook tocá **Probar** con tu email: te llega el mail con el asunto marcado `[Prueba]`.
+
+- Solo sale para pagos confirmados de esta tienda que incluyan el producto principal (`brand.config.ts → impultienda.mainProductId`); los upsells post-compra no lo disparan.
+- Si falta alguna variable o Resend falla, la ruta responde 503/502 e Impultienda reintenta durante ~32 h: las ventas de ese rato reciben el mail cuando se arregla.
+- Los reintentos no duplican el mail: cada aviso se manda a Resend con una clave de idempotencia.
+- El texto está en `src/lib/impultienda/welcome-email.ts` (fuente: `entrega/mail-confirmacion-compra.md`).
+
+### 4 · Compra de prueba
 Hacé una compra de prueba y verificá que llegue el mail de entrega, que su botón abra la app y que la venta tenga las `utm_*`.
 
 ### 4 · Cuotas

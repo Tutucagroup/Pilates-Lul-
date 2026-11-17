@@ -57,7 +57,14 @@ export const brand = {
     checkoutUrl: "https://pilates-lulu.impultienda.ar/checkout",
     /** ID del producto que se manda a Meta en InitiateCheckout (content_ids). */
     productId: "pilates-lulu-reto-28",
+    /** ID de la tienda en Impultienda: el webhook solo procesa ventas de esta tienda. */
+    storeId: "a7046554-4411-4986-9077-5449e49a4d13",
+    /** ID del producto principal (el reto) en Impultienda: el mail de bienvenida sale solo si la compra lo incluye. */
+    mainProductId: "48329805-3d4e-4dc2-a72b-2747672cc215",
   },
+
+  /** App de alumnas: el producto que se entrega. Va en el mail de bienvenida. */
+  appUrl: "https://app-alumnas.vercel.app",
 
   meta: {
     /** ID del Meta Pixel / dataset. Vacío = el Pixel no se carga. */
