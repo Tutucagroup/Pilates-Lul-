@@ -1,10 +1,11 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
-import { CheckCircle2, LockKeyhole } from "lucide-react";
+import { CheckCircle2, LockKeyhole, ShoppingBag } from "lucide-react";
 import { Back } from "@/components/Back";
-import { Button, Card, PageTitle } from "@/components/ui";
+import { Button, Card, Eyebrow, PageTitle } from "@/components/ui";
 import { plans } from "@/data/program";
+import { money } from "@/lib/money";
 import { useApp } from "@/lib/store";
 
 const addons = plans.filter((p) => p.addon);
@@ -135,6 +136,39 @@ export default function Activar() {
           </form>
         </Card>
       )}
+
+      {!done && plan.addon?.buyUrl ? (
+        <Card>
+          <Eyebrow>¿Todavía no lo tenés?</Eyebrow>
+          <h2 className="mt-1 font-display text-[22px] font-semibold leading-tight">Sumá {plan.name}</h2>
+          <p className="mt-1 text-[15.5px] text-muted">
+            {plan.subtitle} · {plan.classes.length} clases. Con el reto de 28 días tenés el programa completo de Pilates Lulú.
+          </p>
+          <p className="mt-3 text-[32px] font-extrabold leading-none text-ink">{money(plan.addon.price)}</p>
+          <p className="mt-1 text-[14px] text-muted">Pago único</p>
+          <a
+            href={buyLink(plan.addon.buyUrl, savedEmail)}
+            className="mt-4 flex min-h-12 w-full items-center justify-center gap-2 rounded-2xl bg-brand px-5 py-3 text-[17px] font-bold text-white hover:bg-brand-dark [[data-theme=dark]_&]:text-bg"
+          >
+            <ShoppingBag size={19} /> Sumalo por {money(plan.addon.price)}
+          </a>
+          <p className="mt-3 text-[14px] text-muted">
+            Después de pagar te llega un mail con tu código. Volvé a esta pantalla para activarlo o tocá el botón del mail.
+          </p>
+        </Card>
+      ) : null}
     </div>
   );
+}
+
+/** Link de compra del upsell con el email ya escrito en el checkout, si lo conocemos. */
+function buyLink(buyUrl: string, email: string | null): string {
+  if (!email) return buyUrl;
+  try {
+    const u = new URL(buyUrl);
+    u.searchParams.set("email", email);
+    return u.toString();
+  } catch {
+    return buyUrl;
+  }
 }

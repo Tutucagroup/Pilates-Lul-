@@ -31,7 +31,15 @@ export type Plan = {
    * Plan adicional que se vende aparte (upsell en Impultienda). Queda bloqueado hasta que la alumna
    * lo activa con el código que le llega por mail (pantalla /activar).
    */
-  addon?: boolean;
+  addon?: {
+    /** Precio en pesos. Tiene que coincidir con el del upsell en Impultienda. */
+    price: number;
+    /**
+     * Link de compra propio del upsell: en Impultienda → Diseño de ebooks → tarjeta del upsell →
+     * tres puntitos → «Copiar link de compra». Vacío = no se muestra el botón para comprarlo desde la app.
+     */
+    buyUrl: string;
+  };
   weeks: { name: string; text: string }[];
   classes: ClassDay[];
 };
@@ -108,7 +116,7 @@ const rejuvenece: Plan = {
   name: "Rejuvenecé después de los 50",
   subtitle: "Quemá grasa y tonificá todo el cuerpo",
   perWeek: 5,
-  addon: true,
+  addon: { price: 5900, buyUrl: "" },
   weeks: [
     { name: "Fortalecer", text: "Cinco rutinas cortas, de lunes a viernes." },
     { name: "Fortalecer", text: "Repetís las cinco rutinas. Vas a notar que salen mejor." },

@@ -7,7 +7,7 @@ import { upsellOn } from "./BuyButton";
 /**
  * Oferta para sumar el plan adicional antes de ir al checkout (order bump).
  * Arranca destildada: la compradora elige. Si la tilda, el checkout abre con el upsell ya agregado.
- * No se muestra mientras brand.upsell.productId esté vacío.
+ * No se muestra mientras brand.upsell.productId esté vacío o brand.upsell.inCheckout sea false.
  */
 export function UpsellBump() {
   const on = useQuiz((s) => s.bump);

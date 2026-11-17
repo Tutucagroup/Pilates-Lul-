@@ -8,8 +8,8 @@ import { logQuizEvent, newEventId, trackMeta } from "@/lib/tracking/client";
 import { Button } from "../ui/Button";
 
 const configured = /^https:\/\//.test(brand.impultienda.checkoutUrl);
-/** El upsell se ofrece solo si tiene su ID de Impultienda cargado en brand.config.ts. */
-export const upsellOn = brand.upsell.productId.trim() !== "";
+/** El upsell se ofrece en el quiz si tiene su ID cargado y ya es order bump en el checkout (brand.config.ts). */
+export const upsellOn = brand.upsell.productId.trim() !== "" && brand.upsell.inCheckout;
 
 type Props = { label: string; level: string; stepIndex: number; stepName: string; position: "top" | "bottom" };
 

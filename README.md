@@ -226,7 +226,7 @@ Impultienda manda su mail de entrega fijo. El mail de bienvenida propio (link a 
 - El texto está en `src/lib/impultienda/welcome-email.ts` (fuente: `entrega/mail-confirmacion-compra.md`).
 
 ### 4 · Upsell: Rejuvenecé después de los 50 ($5.900)
-El plan "Rejuvenecé después de los 50" de la app de alumnas es un producto aparte. Se ofrece como **order bump**: en la oferta del quiz (tarjeta "Sumalo a tu plan" debajo del precio) y otra vez dentro del checkout. En la app queda con candado hasta que la alumna lo activa con un código que le llega por mail.
+El plan "Rejuvenecé después de los 50" de la app de alumnas es un producto aparte. Se ofrece como **order bump**: en la oferta del quiz (tarjeta "Sumalo a tu plan" debajo del precio) y otra vez dentro del checkout. Quien no lo sumó lo puede comprar después desde la app (botón "Sumalo por $5.900", que abre el link de compra propio del upsell). En la app queda con candado hasta que la alumna lo activa con un código que le llega por mail.
 
 Cómo viaja:
 1. En el quiz la alumna tilda la tarjeta → el botón abre el checkout con `?upsells=<posición>` y el upsell ya agregado (lo puede destildar). Si no la tildó, el checkout igual se lo ofrece.
@@ -234,14 +234,16 @@ Cómo viaja:
 3. El webhook calcula un código con el email de la compradora (`src/lib/activation.ts`, HMAC con `ACTIVATION_SECRET`) y lo manda en el mail de bienvenida, con un botón que lo activa solo.
 4. La app verifica el código en su servidor (`app-alumnas/src/app/api/activar`) con el mismo secreto y desbloquea el plan en ese dispositivo. No hace falta base de datos.
 
-Para prenderlo, en este orden:
-1. Generá un secreto (`openssl rand -hex 32`) y cargalo como `ACTIVATION_SECRET` en **los dos** proyectos de Vercel (landing y app de alumnas). Redeploy de los dos.
-2. En Impultienda → **Diseño de ebooks**: creá el upsell "Rejuvenecé después de los 50" a $5.900, con **«Disponible solo en post-compra» prendido** por ahora, así no aparece en el checkout antes de tiempo. Entregable: **link externo** `https://app-alumnas.vercel.app/activar`.
-3. Copiá su ID en `brand.config.ts → upsell.productId` y revisá `upsell.checkoutPosition` (1 si es el único upsell). Deploy.
-4. Apagá «Disponible solo en post-compra»: desde ahí aparece como bump en el checkout y en el quiz.
-5. Hacé una compra de prueba con el bump tildado: tiene que llegar el mail de bienvenida con "ACTIVAR MI PLAN" y el código, y el botón tiene que desbloquear el plan.
+Estado en Impultienda: el upsell **ya está creado** en Diseño de ebooks (ID `50ea7b14-43ec-4901-b615-f81b4da73143`, $5.900, entregable con link a `https://app-alumnas.vercel.app/activar`), con **«Disponible solo en post-compra» prendido** para que no aparezca en el checkout antes de tiempo. Su ID ya está en `brand.config.ts → upsell.productId`.
 
-Con `upsell.productId` vacío la tarjeta no se muestra y el webhook no activa nada.
+Para prenderlo, en este orden:
+1. Generá un secreto (`openssl rand -hex 32`) y cargalo como `ACTIVATION_SECRET` en **los dos** proyectos de Vercel (landing y app de alumnas).
+2. En Impultienda → Diseño de ebooks → tarjeta del upsell → tres puntitos → **«Copiar link de compra»**, y pegalo en `app-alumnas/src/data/program.ts → rejuvenece.addon.buyUrl` (el botón "Sumalo por $5.900" de la app aparece cuando ese link está cargado).
+3. Deploy de las dos apps.
+4. En Impultienda apagá «Disponible solo en post-compra» del upsell: desde ahí aparece como bump en el checkout. Después poné `brand.config.ts → upsell.inCheckout: true` y deploy: recién ahí el quiz muestra la tarjeta para sumarlo. Revisá `upsell.checkoutPosition` (1 si es el único upsell).
+5. Compras de prueba: (a) desde el quiz con la tarjeta tildada, tiene que llegar el mail de bienvenida con "ACTIVAR MI PLAN" y el código; (b) desde el botón de la app, tiene que llegar el mail corto con el código. En los dos casos el botón del mail tiene que desbloquear el plan.
+
+Con `upsell.productId` vacío nada de esto se activa; con `upsell.inCheckout: false` el quiz no ofrece el upsell, pero el webhook igual lo activa si se compra desde la app.
 
 > El candado es del lado del navegador: alcanza para que el plan no se vea sin comprarlo, pero alguien con conocimientos técnicos podría saltearlo, y los videos siguen siendo públicos en YouTube. Para un control real hacen falta cuentas con inicio de sesión.
 

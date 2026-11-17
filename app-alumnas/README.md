@@ -45,6 +45,7 @@ Los videos se reproducen con el reproductor de YouTube: si un video se borra, se
 
 "Rejuvenecé después de los 50" se vende aparte, como upsell de $5.900 en el checkout de Impultienda. En `src/data/program.ts` está marcado con `addon: true`: aparece con candado en **Programa** hasta que se activa.
 
+- Quien no lo compró en el checkout lo puede comprar desde la app: en `/activar` aparece "Sumalo por $5.900", que abre el link de compra propio del upsell (`src/data/program.ts → rejuvenece.addon.buyUrl`; se copia en Impultienda → Diseño de ebooks → tarjeta del upsell → «Copiar link de compra»). Vacío = el botón no se muestra.
 - Quien lo compra recibe un mail con un botón que abre `/activar` y lo activa solo, y un código `ABCD-EFGH` para escribir a mano junto con su email. El código a mano hace falta en la app instalada del iPhone, que no comparte lo guardado en Safari.
 - `/api/activar` verifica el código con `ACTIVATION_SECRET`, que tiene que ser **el mismo valor** que en el proyecto de la landing (ahí lo calcula el webhook de Impultienda). Hay un tope de 15 intentos fallidos por hora por IP.
 - La activación queda guardada en ese dispositivo: en otro celular se activa de nuevo con el mismo mail. "Borrar todos mis datos" no la quita.

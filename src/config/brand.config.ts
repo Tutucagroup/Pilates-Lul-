@@ -55,10 +55,17 @@ export const brand = {
   /**
    * Upsell: plan adicional "Rejuvenecé después de los 50" (order bump en el checkout de Impultienda).
    * Con productId vacío no se ofrece en el quiz y el webhook no lo activa.
+   * También se vende suelto desde la app de alumnas (botón "Sumalo" en /activar, con el link de compra propio).
    */
   upsell: {
     /** ID del producto upsell en Impultienda (sale de Diseño de ebooks o de impultienda_listar_productos). */
-    productId: "",
+    productId: "50ea7b14-43ec-4901-b615-f81b4da73143",
+    /**
+     * true cuando el upsell aparece como order bump en el checkout (en Impultienda, «Disponible solo en
+     * post-compra» apagado). Mientras sea false, el quiz no muestra la tarjeta para sumarlo, porque el
+     * checkout no lo cobraría; el webhook igual lo activa si se compra por su link propio.
+     */
+    inCheckout: false,
     /**
      * Posición del upsell entre los upsells de la tienda (1 = el primero). El link del checkout lo lleva
      * tildado con ?upsells=<posición>. Si sumás otro upsell antes que este, actualizá el número.
