@@ -20,6 +20,14 @@ describe("checkout", () => {
       "https://pilates-lulu.impultienda.ar/checkout",
     );
   });
+  it("lleva el upsell tildado por su posición", () => {
+    const url = new URL(
+      buildCheckoutUrl({ checkoutUrl: "https://pilates-lulu.impultienda.ar/checkout", attribution: { utm_source: "ig" }, upsells: [1] }),
+    );
+    expect(url.searchParams.get("upsells")).toBe("1");
+    expect(url.searchParams.get("utm_source")).toBe("ig");
+    expect(buildCheckoutUrl({ checkoutUrl: "https://x.test/checkout", attribution: {}, upsells: [0] })).toBe("https://x.test/checkout");
+  });
   it("lee UTM y fbclid del querystring", () => {
     expect(readAttribution("?utm_source=ig&fbclid=x&otro=1")).toEqual({ utm_source: "ig", fbclid: "x" });
   });

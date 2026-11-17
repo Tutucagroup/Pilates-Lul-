@@ -1,6 +1,6 @@
 # Guiones de video · Pilates Lulú
 
-5 guiones originales de 30–45 s para Reels / Stories / Feed (9:16). Español rioplatense, voseo.
+6 guiones originales de 30–60 s para Reels / Stories / Feed (9:16). Español rioplatense, voseo.
 Formato de cada uno: **Gancho (0–3 s) · Desarrollo · Cierre (CTA)**, con lo que se ve, lo que se dice (VO) y el texto en pantalla (TP).
 
 Reglas para grabar
@@ -77,6 +77,56 @@ Reglas para grabar
 | 15–30 s | Pantalla "Tu plan está listo" con nivel y zonas. Corte a la clase correspondiente. | "Con eso elegimos tu nivel —suave o intermedio— y el foco de tus veintiocho días." | Nivel suave o intermedio |
 | 30–40 s | Las tres mujeres haciendo cada una su versión del mismo movimiento. | "Quince minutos por día, en casa, a tu ritmo." | 15 min · en casa |
 | 40–45 s | Logo + botón. | "Tarda un minuto. Probalo." | Empezá el cuestionario → |
+
+---
+
+## 6 · "Mi mamá empezó el reto" (testimonio + oferta) — 55–60 s
+**Ángulo:** prueba social real (una hija graba a su mamá) + qué incluye + oferta con precio.
+**Promesa:** 15 minutos por día en casa, con un plan que te dice qué hacer cada día. Precio de oferta claro.
+**Formato:** 4 bloques que se graban por separado y se pegan con cortes secos. Los bloques B, C y D también sirven sueltos como anuncios cortos.
+
+⚠️ El bloque A **solo** se graba con una alumna real que hizo el reto, con consentimiento firmado (ella y quien graba). Lo que dice sale de ella, con sus palabras: no se le pasa un texto ni se le inventan resultados. Si todavía no hay una alumna que haya terminado, se graba el bloque A el **día 1** ("hoy empieza") y después se hace la segunda parte cuando termine.
+
+### Bloque A · Testimonio (0–15 s) — celular vertical, cámara frontal, luz de casa
+| Tiempo | Imagen | VO | TP |
+|---|---|---|---|
+| 0–3 s | Selfie de la hija; atrás, la mamá en el living desenrollando el mat. | "Mi mamá empezó el Reto de 28 días de Pilates Lulú." | Mi mamá empezó el reto 👇 |
+| 3–10 s | La hija gira la cámara hacia la mamá, que está haciendo la clase del día con el celular apoyado. | Hija: "¿Cuántos días llevás?" · Mamá: *(responde con sus palabras: el día en el que está y qué le está pareciendo)* | Día __ de 28 *(el real)* |
+| 10–15 s | La mamá, a cámara, sonriendo o riéndose. | Mamá: *(una frase suya sobre cómo se siente: más ágil, más ganas, que lo hace a la mañana, etc.)* | *(su frase, textual)* |
+
+Preguntas para que la hija le haga fuera de cámara (se usa la mejor respuesta): ¿Qué fue lo que más te costó al principio? · ¿A qué hora lo hacés? · ¿Qué notás distinto en el día a día? · ¿Se lo recomendarías a una amiga?
+
+### Bloque B · Objeción tiempo (15–28 s) — la instructora, en el living, con el mat
+| Tiempo | Imagen | VO | TP |
+|---|---|---|---|
+| 15–19 s | La instructora a cámara, plano medio. | "La mayoría de las mujeres que empiezan nos dicen lo mismo: no tengo tiempo." | "No tengo tiempo" |
+| 19–24 s | Hace un movimiento lento apoyada en la pared (elevación de pierna con control). | "Por eso cada clase dura quince minutos y la hacés en tu casa." | 15 min · en casa |
+| 24–28 s | Sigue el movimiento, mira a cámara. | "Sin gimnasio, sin saltos y sin equipos." | Sin gimnasio · sin saltos |
+
+### Bloque C · Qué incluye (28–43 s) — la instructora mostrando el celular / la laptop con la app
+| Tiempo | Imagen | VO | TP |
+|---|---|---|---|
+| 28–32 s | Plano medio, la instructora sostiene el celular con la app de alumnas abierta. | "¿Qué es el Reto de Pilates Lulú? Un plan de veintiocho días de Pilates Asiático." | Reto de 28 días |
+| 32–36 s | Primer plano de la pantalla: la clase del día con el video. | "Todos los días tenés tu clase guiada, de la más suave a la más intensa." | Clases guiadas día por día |
+| 36–40 s | Pantalla: sección Recetas y el gráfico de Progreso. | "Recetas, y tu progreso en una app que te dice qué hacer cada día." | Recetas · seguimiento |
+| 40–43 s | Pantalla: chat con la coach Lulú. | "Y si tenés una duda, se la preguntás a la coach." | Coach para tus dudas |
+
+### Bloque D · Oferta + cierre (43–60 s) — la instructora, más cerca de cámara, tono de aviso
+| Tiempo | Imagen | VO | TP |
+|---|---|---|---|
+| 43–48 s | Plano medio corto. | "Ahora el reto está en oferta: de cuarenta y cinco mil pesos, lo tenés a diecinueve mil novecientos." | ~~$45.000~~ **$19.900** en oferta |
+| 48–52 s | Mismo plano, cuenta con los dedos. | "Es un pago único, y tenés acceso de por vida." | Pago único · acceso de por vida |
+| 52–56 s | Mismo plano, gesto de tranquilidad. | "Y si en siete días no es para vos, te devolvemos el dinero." | Garantía de 7 días |
+| 56–60 s | Placa final (ver abajo). | "Tocá abajo, hacé el cuestionario de un minuto y empezá hoy." | Hacé el cuestionario 👇 |
+
+**Placa final (últimos 3–4 s):** fondo crudo/beige con luz natural, logo de Pilates Lulú arriba al centro, título grande "RETO DE 28 DÍAS", subtítulo "Pilates Asiático para mujeres +40", precio "~~$45.000~~ $19.900 · en oferta · pago único · acceso de por vida", botón con borde "Hacé el cuestionario y empezá hoy".
+
+**Urgencia (opcional, solo si es real):** si la oferta tiene fecha de cierre cargada en `brand.config.ts → urgency.countdown.endsAt`, se puede sumar al bloque D: *"La oferta termina el [día real]."* con TP "Termina el [fecha]". Si no hay fecha real, no se dice. Tampoco se nombran personas que "ya entraron" ni "últimos cupos" si no hay un cupo real.
+
+**Chequeos antes de publicar**
+- El precio dicho y escrito tiene que coincidir con Impultienda ($19.900, tachado $45.000). No se ofrecen cuotas: pago único con acceso de por vida.
+- Nada de kilos, centímetros ni "antes/después" en el testimonio, aunque la alumna lo diga: se corta.
+- Sin preguntas sobre atributos de quien mira ("¿Sos mamá?", "¿Tenés más de 40?"): Meta las rechaza.
 
 ---
 

@@ -1,11 +1,12 @@
 import { createHmac } from "node:crypto";
 import { describe, expect, it } from "vitest";
-import { parsePayload, verifySignature, welcomeRecipient, type WebhookPayload } from "../impultienda/webhook";
-import { escapeHtml, welcomeEmail } from "../impultienda/welcome-email";
+import { emailKey } from "../entitlements";
+import { orderAccess, parsePayload, verifySignature, type WebhookPayload } from "../impultienda/webhook";
+import { addonEmail, escapeHtml, welcomeEmail } from "../impultienda/welcome-email";
 
 const secret = "whsec_test";
 const sign = (ts: string, body: string) => createHmac("sha256", secret).update(`${ts}.${body}`).digest("hex");
-const cfg = { storeId: "store-1", mainProductId: "prod-main" };
+const cfg = { storeId: "store-1", mainProductId: "prod-main", addons: [{ productId: "prod-up", planId: "rejuvenece" }] };
 
 const payload = (over: Partial<WebhookPayload["data"]> = {}, event = "order.approved"): WebhookPayload => ({
   id: "deliv-1",
@@ -54,22 +55,45 @@ describe("parsePayload", () => {
   });
 });
 
-describe("welcomeRecipient", () => {
-  it("manda a la compradora del reto, con el primer nombre", () => {
-    expect(welcomeRecipient(payload(), cfg)).toEqual({ email: "ana@example.com", firstName: "Ana" });
+describe("orderAccess", () => {
+  it("compra del reto: bienvenida, con el primer nombre", () => {
+    expect(orderAccess(payload(), cfg)).toEqual({ email: "ana@example.com", firstName: "Ana", main: true, addonPlans: [] });
   });
   it("funciona sin nombre", () => {
-    expect(welcomeRecipient(payload({ customer: { email: "ana@example.com", name: "" } }), cfg)).toEqual({
-      email: "ana@example.com",
-      firstName: "",
-    });
+    expect(orderAccess(payload({ customer: { email: "ana@example.com", name: "" } }), cfg)).toMatchObject({ firstName: "" });
   });
-  it("ignora otros eventos, otras tiendas, upsells post-compra y otros productos", () => {
-    expect(welcomeRecipient(payload({}, "order.created"), cfg)).toEqual({ skip: "event_not_handled" });
-    expect(welcomeRecipient(payload({ store: { id: "otra" } }), cfg)).toEqual({ skip: "other_store" });
-    expect(welcomeRecipient(payload({ is_post_purchase: true }), cfg)).toEqual({ skip: "post_purchase" });
-    expect(welcomeRecipient(payload({ items: [{ product_id: "otro" }] }), cfg)).toEqual({ skip: "product_not_mapped" });
-    expect(welcomeRecipient(payload({ customer: { email: "no-es-mail" } }), cfg)).toEqual({ skip: "no_email" });
+  it("reto + order bump: bienvenida con el plan adicional", () => {
+    const items = [{ product_id: "prod-main", type: "main" }, { product_id: "prod-up", type: "upsell" }];
+    expect(orderAccess(payload({ items }), cfg)).toMatchObject({ main: true, addonPlans: ["rejuvenece"] });
+  });
+  it("upsell post-compra o comprado solo: activa el plan sin bienvenida", () => {
+    const items = [{ product_id: "prod-up", type: "upsell" }];
+    expect(orderAccess(payload({ items, is_post_purchase: true }), cfg)).toMatchObject({ main: false, addonPlans: ["rejuvenece"] });
+    expect(orderAccess(payload({ items }), cfg)).toMatchObject({ main: false, addonPlans: ["rejuvenece"] });
+  });
+  it("sin upsell configurado, el upsell solo no hace nada", () => {
+    const items = [{ product_id: "prod-up", type: "upsell" }];
+    expect(orderAccess(payload({ items }), { ...cfg, addons: [] })).toEqual({ skip: "product_not_mapped" });
+  });
+  it("ignora otros eventos, otras tiendas y otros productos", () => {
+    expect(orderAccess(payload({}, "order.created"), cfg)).toEqual({ skip: "event_not_handled" });
+    expect(orderAccess(payload({ store: { id: "otra" } }), cfg)).toEqual({ skip: "other_store" });
+    expect(orderAccess(payload({ items: [{ product_id: "otro" }] }), cfg)).toEqual({ skip: "product_not_mapped" });
+    expect(orderAccess(payload({ customer: { email: "no-es-mail" } }), cfg)).toEqual({ skip: "no_email" });
+  });
+});
+
+describe("emailKey", () => {
+  it("es el mismo para el mismo email, sin importar mayúsculas ni espacios", () => {
+    const k = emailKey("Ana@Example.com ", "s1");
+    expect(k).toMatch(/^[0-9a-f]{40}$/);
+    expect(emailKey("ana@example.com", "s1")).toBe(k);
+  });
+  it("cambia con el email y con el secreto, y no contiene el email", () => {
+    const k = emailKey("ana@example.com", "s1");
+    expect(emailKey("eva@example.com", "s1")).not.toBe(k);
+    expect(emailKey("ana@example.com", "s2")).not.toBe(k);
+    expect(k).not.toContain("ana");
   });
 });
 
@@ -92,5 +116,24 @@ describe("welcomeEmail", () => {
     const m = welcomeEmail({ ...base, firstName: "<script>" });
     expect(m.html).not.toContain("<script>");
     expect(m.html).toContain(escapeHtml("<script>"));
+  });
+  it("con el order bump suma el botón para activar el plan adicional", () => {
+    const act = { planName: "Rejuvenecé después de los 50", url: "https://app.test/activar#plan=rejuvenece" };
+    const m = welcomeEmail({ ...base, activations: [act] });
+    expect(m.html).toContain("y a Rejuvenecé después de los 50");
+    expect(m.html).toContain('href="https://app.test/activar#plan=rejuvenece"');
+    expect(m.html).toContain("ACTIVAR MI PLAN");
+    expect(m.text).toContain("https://app.test/activar#plan=rejuvenece");
+    expect(welcomeEmail(base).html).not.toContain("ACTIVAR MI PLAN");
+  });
+});
+
+describe("addonEmail", () => {
+  it("activa el plan adicional comprado solo", () => {
+    const act = { planName: "Rejuvenecé después de los 50", url: "https://app.test/activar#x" };
+    const m = addonEmail({ firstName: "Ana", email: "ana@example.com", appUrl: "https://app.test", logoUrl: "https://x.test/l.png", activations: [act] });
+    expect(m.subject).toBe("Sumaste Rejuvenecé después de los 50 🌸 Activalo en tu app");
+    expect(m.html).toContain("ana@example.com");
+    expect(m.html).toContain('href="https://app.test/activar#x"');
   });
 });

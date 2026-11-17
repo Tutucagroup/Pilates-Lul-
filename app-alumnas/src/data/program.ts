@@ -27,6 +27,19 @@ export type Plan = {
   subtitle: string;
   /** Clases por semana (7 = todos los días; 5 = de lunes a viernes). */
   perWeek: number;
+  /**
+   * Plan adicional que se vende aparte (upsell en Impultienda). Queda bloqueado hasta que la alumna
+   * lo activa con su email de compra (pantalla /activar).
+   */
+  addon?: {
+    /** Precio en pesos. Tiene que coincidir con el del upsell en Impultienda. */
+    price: number;
+    /**
+     * Link de compra propio del upsell: en Impultienda → Diseño de ebooks → tarjeta del upsell →
+     * tres puntitos → «Copiar link de compra». Vacío = no se muestra el botón para comprarlo desde la app.
+     */
+    buyUrl: string;
+  };
   weeks: { name: string; text: string }[];
   classes: ClassDay[];
 };
@@ -103,6 +116,7 @@ const rejuvenece: Plan = {
   name: "Rejuvenecé después de los 50",
   subtitle: "Quemá grasa y tonificá todo el cuerpo",
   perWeek: 5,
+  addon: { price: 5900, buyUrl: "https://pilates-lulu.impultienda.ar/checkout?p=50ea7b14-43ec-4901-b615-f81b4da73143" },
   weeks: [
     { name: "Fortalecer", text: "Cinco rutinas cortas, de lunes a viernes." },
     { name: "Fortalecer", text: "Repetís las cinco rutinas. Vas a notar que salen mejor." },
@@ -115,5 +129,7 @@ const rejuvenece: Plan = {
 export const plans: Plan[] = [pilates28, rejuvenece];
 export const DEFAULT_PLAN = pilates28.id;
 export const getPlan = (id: string): Plan => plans.find((p) => p.id === id) ?? pilates28;
+/** Un plan adicional solo se puede usar si está activado en este dispositivo. */
+export const canUsePlan = (plan: Plan, owned: string[]) => !plan.addon || owned.includes(plan.id);
 export const getClass = (plan: Plan, day: number) => plan.classes.find((x) => x.day === day);
 export const weekOf = (plan: Plan, day: number) => Math.min(plan.weeks.length, Math.ceil(day / plan.perWeek));

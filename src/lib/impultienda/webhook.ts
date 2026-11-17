@@ -57,21 +57,36 @@ export function parsePayload(rawBody: string): WebhookPayload | null {
 
 const EMAIL = /^[^\s@<>"]+@[^\s@<>"]+\.[^\s@<>"]+$/;
 
+export type AccessConfig = {
+  storeId: string;
+  mainProductId: string;
+  /** Upsells que habilitan un plan adicional en la app: producto de Impultienda → id del plan. */
+  addons: { productId: string; planId: string }[];
+};
+
+export type OrderAccess = {
+  email: string;
+  firstName: string;
+  /** La compra incluye el reto (producto principal): corresponde el mail de bienvenida. */
+  main: boolean;
+  /** Planes adicionales comprados en esta orden (order bump, upsell post-compra o link propio del upsell). */
+  addonPlans: string[];
+};
+
 /**
- * Decide si a esta venta le corresponde el mail de bienvenida y a quién va.
- * Solo pagos confirmados de esta tienda que incluyan el producto principal (no upsells post-compra).
+ * Decide qué habilita esta venta y a quién se le avisa.
+ * - Con el principal (con o sin order bump): se anota el reto (y el plan adicional si lo sumó) y, si hay proveedor de mails, sale la bienvenida.
+ * - Solo un upsell (post-compra, que llega en un aviso aparte, o comprado con su link propio): se anota ese plan.
  */
-export function welcomeRecipient(
-  p: WebhookPayload,
-  cfg: { storeId: string; mainProductId: string },
-): { email: string; firstName: string } | { skip: string } {
+export function orderAccess(p: WebhookPayload, cfg: AccessConfig): OrderAccess | { skip: string } {
   if (p.event !== "order.approved") return { skip: "event_not_handled" };
   if (p.data.store?.id && p.data.store.id !== cfg.storeId) return { skip: "other_store" };
-  if (p.data.is_post_purchase) return { skip: "post_purchase" };
-  const items = p.data.items ?? [];
-  if (!items.some((i) => i.product_id === cfg.mainProductId)) return { skip: "product_not_mapped" };
+  const ids = new Set((p.data.items ?? []).map((i) => i.product_id).filter(Boolean));
+  const main = ids.has(cfg.mainProductId);
+  const addonPlans = [...new Set(cfg.addons.filter((a) => a.productId && ids.has(a.productId)).map((a) => a.planId))];
+  if (!main && !addonPlans.length) return { skip: "product_not_mapped" };
   const email = (p.data.customer?.email ?? "").trim();
   if (!EMAIL.test(email) || email.length > 254) return { skip: "no_email" };
   const firstName = (p.data.customer?.name ?? "").trim().split(/\s+/)[0]?.slice(0, 60) ?? "";
-  return { email, firstName };
+  return { email, firstName, main, addonPlans };
 }

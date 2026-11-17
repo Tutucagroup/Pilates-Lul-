@@ -8,6 +8,8 @@ import { logQuizEvent, newEventId, trackMeta } from "@/lib/tracking/client";
 import { Button } from "../ui/Button";
 
 const configured = /^https:\/\//.test(brand.impultienda.checkoutUrl);
+/** El upsell se ofrece en el quiz si tiene su ID cargado y ya es order bump en el checkout (brand.config.ts). */
+export const upsellOn = brand.upsell.productId.trim() !== "" && brand.upsell.inCheckout;
 
 type Props = { label: string; level: string; stepIndex: number; stepName: string; position: "top" | "bottom" };
 
@@ -23,18 +25,27 @@ export function BuyButton({ label, level, stepIndex, stepName, position }: Props
     }
     setBusy(true);
     const s = useQuiz.getState();
+    const bump = upsellOn && s.bump;
     const eventId = newEventId("ic");
     if (brand.meta.sendInitiateCheckout) {
+      const ids = [brand.impultienda.productId, ...(bump ? [brand.upsell.productId] : [])];
       trackMeta(
         "InitiateCheckout",
-        { value: price.offer, currency: price.currency, content_ids: [brand.impultienda.productId], content_type: "product", num_items: 1 },
+        {
+          value: price.offer + (bump ? brand.upsell.price : 0),
+          currency: price.currency,
+          content_ids: ids,
+          content_type: "product",
+          num_items: ids.length,
+        },
         eventId,
       );
     }
-    logQuizEvent({ event: "checkout", stepId: "oferta", stepIndex, stepName, value: { position, eventId, level } });
+    logQuizEvent({ event: "checkout", stepId: "oferta", stepIndex, stepName, value: { position, eventId, level, bump } });
     window.location.href = buildCheckoutUrl({
       checkoutUrl: brand.impultienda.checkoutUrl,
       attribution: s.attribution,
+      upsells: bump ? [brand.upsell.checkoutPosition] : [],
     });
   };
 
