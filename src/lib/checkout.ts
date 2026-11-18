@@ -10,10 +10,12 @@ export type Attribution = {
   utm_campaign?: string;
   utm_content?: string;
   utm_term?: string;
+  utm_id?: string;
   fbclid?: string;
 };
 
-export const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term"] as const;
+/** utm_id lleva el ID del anuncio de Meta ({{ad.id}}): UTMIFLOW lo usa para cruzar el gasto con cada venta. */
+export const UTM_KEYS = ["utm_source", "utm_medium", "utm_campaign", "utm_content", "utm_term", "utm_id"] as const;
 
 export type CheckoutParams = {
   /** URL completa del checkout de la tienda. */
