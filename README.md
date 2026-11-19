@@ -229,7 +229,8 @@ Qué hace con cada venta:
 El reto de 28 días y "Rejuvenecé y Adelgazá después de los 50" **no se venden por separado**: los dos vienen en el producto principal de $19.900.
 
 - **Quiz:** junto al precio, la tarjeta "Incluye los 2 programas" (`brand.config.ts → includedProgram`). También están en "Qué incluye" y en la FAQ. No hay order bump.
-- **Checkout:** un solo producto. El upsell viejo de Impultienda (`50ea7b14-43ec-4901-b615-f81b4da73143`, $5.900) tiene que quedar **desactivado** para que el checkout no lo ofrezca aparte.
+- **Checkout (Impultienda):** el principal «Pilates Asiático - Reto 28 días» ($19.900) lleva como **bono** «Rejuvenecé y Adelgazá después de los 50» (`c1d30ae5-2f71-4cce-85e9-c7cd97abb27d`, entregable: link a la app). El checkout lo muestra como incluido debajo del principal y llega en el mismo mail de entrega. La etiqueta del resumen se elige en Diseño de checkout → «Anuncio de bonos en el resumen».
+- El upsell viejo de $5.900 (`50ea7b14-43ec-4901-b615-f81b4da73143`) quedó con **«Solo post-compra»** y sin funnel post-compra, así que no se ofrece en ningún lado. En una tienda clásica los ebooks no se desactivan desde el conector: si querés sacarlo del todo, borralo desde Diseño de ebooks.
 - **Webhook y mail:** cada compra del reto anota los 2 planes y el mail de bienvenida menciona los dos.
 - **App de alumnas:** los 2 planes están abiertos para todas en Programa (ver `app-alumnas/README.md`).
 
