@@ -21,6 +21,8 @@ Estilo común:
 | zona-piernas.webp | 6 | 1:1 | idem | Piernas y glúteos resaltados. |
 | zona-espalda.webp | 6 | 1:1 | figura de espaldas | Espalda resaltada. |
 | zona-todo.webp | 6 | 1:1 | idem | Cuerpo entero con contorno resaltado. |
+| zona-cintura.webp | 5 · zonas | 1:1 | figura de espaldas | Costados de la cintura resaltados. Hecha a partir de zona-espalda. |
+| zona-cola.webp | 5 · zonas | 1:1 | figura de espaldas | Glúteos resaltados. Hecha a partir de zona-espalda. |
 | cuerpo-firmeza.webp | 7 · single | 3:4 | figura entera | Ilustración mujer de contextura delgada, postura erguida. |
 | cuerpo-panza.webp | 7 | 3:4 | idem | Ilustración mujer de contextura media con algo de abdomen. |
 | cuerpo-kilos.webp | 7 | 3:4 | idem | Ilustración mujer de contextura grande, expresión serena. |

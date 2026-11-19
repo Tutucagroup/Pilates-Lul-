@@ -23,7 +23,6 @@ import { InfoStepView } from "./steps/InfoStep";
 import { RulerStepView } from "./steps/RulerStep";
 import { LoaderStepView } from "./steps/LoaderStep";
 import { ResultStepView } from "./steps/ResultStep";
-import { OfferStepView } from "./offer/OfferStep";
 
 const FIRST_ID = funnel.steps[0].id;
 export const hrefFor = (id: string) => (id === FIRST_ID ? "/" : `/q/${id}`);
@@ -90,7 +89,7 @@ export function StepScreen({ stepId }: { stepId: string }) {
   }, [base.id, router]);
 
   const summary = useMemo(
-    () => (base.type === "result" || base.type === "offer" ? buildPlanSummary(funnel, answers) : null),
+    () => (base.type === "result" ? buildPlanSummary(funnel, answers) : null),
     [base.type, answers],
   );
 
@@ -118,7 +117,7 @@ export function StepScreen({ stepId }: { stepId: string }) {
           step={step}
           summary={summary}
           hydrated={hydrated}
-          onNext={goNext}
+          stepIndex={index}
           onShown={() => {
             const s = useQuiz.getState();
             logQuizEvent({ event: "result", stepId: base.id, stepIndex: index, stepName: base.name, variant });
@@ -130,15 +129,11 @@ export function StepScreen({ stepId }: { stepId: string }) {
         />
       );
       break;
-    case "offer":
-      body = summary && <OfferStepView summary={summary} hydrated={hydrated} stepIndex={index} stepName={base.name} />;
-      break;
   }
 
-  const isOffer = base.type === "offer";
   return (
     <>
-      <Header backHref={isOffer || base.type === "loader" ? null : prev ? hrefFor(prev) : null} progress={progress} />
+      <Header backHref={base.type === "result" || base.type === "loader" ? null : prev ? hrefFor(prev) : null} progress={progress} />
       <main
         className={`mx-auto max-w-md px-4 ${progress != null ? "pt-[76px]" : "pt-[64px]"} pb-10 ${
           hasAB && !hydrated ? "opacity-0" : ""

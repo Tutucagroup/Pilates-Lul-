@@ -2,7 +2,7 @@ import { createHmac } from "node:crypto";
 import { describe, expect, it } from "vitest";
 import { emailKey } from "../entitlements";
 import { orderAccess, parsePayload, verifySignature, type WebhookPayload } from "../impultienda/webhook";
-import { addonEmail, escapeHtml, welcomeEmail } from "../impultienda/welcome-email";
+import { escapeHtml, welcomeEmail } from "../impultienda/welcome-email";
 
 const secret = "whsec_test";
 const sign = (ts: string, body: string) => createHmac("sha256", secret).update(`${ts}.${body}`).digest("hex");
@@ -117,23 +117,10 @@ describe("welcomeEmail", () => {
     expect(m.html).not.toContain("<script>");
     expect(m.html).toContain(escapeHtml("<script>"));
   });
-  it("con el order bump suma el botón para activar el plan adicional", () => {
-    const act = { planName: "Rejuvenecé después de los 50", url: "https://app.test/activar#plan=rejuvenece" };
-    const m = welcomeEmail({ ...base, activations: [act] });
-    expect(m.html).toContain("y a Rejuvenecé después de los 50");
-    expect(m.html).toContain('href="https://app.test/activar#plan=rejuvenece"');
-    expect(m.html).toContain("ACTIVAR MI PLAN");
-    expect(m.text).toContain("https://app.test/activar#plan=rejuvenece");
-    expect(welcomeEmail(base).html).not.toContain("ACTIVAR MI PLAN");
-  });
-});
-
-describe("addonEmail", () => {
-  it("activa el plan adicional comprado solo", () => {
-    const act = { planName: "Rejuvenecé después de los 50", url: "https://app.test/activar#x" };
-    const m = addonEmail({ firstName: "Ana", email: "ana@example.com", appUrl: "https://app.test", logoUrl: "https://x.test/l.png", activations: [act] });
-    expect(m.subject).toBe("Sumaste Rejuvenecé después de los 50 🌸 Activalo en tu app");
-    expect(m.html).toContain("ana@example.com");
-    expect(m.html).toContain('href="https://app.test/activar#x"');
+  it("menciona los 2 programas incluidos y ya no pide activar nada", () => {
+    const m = welcomeEmail(base);
+    expect(m.html).toContain("a Pilates Asiático - Reto 28 días y a Rejuvenecé y Adelgazá después de los 50");
+    expect(m.text).toContain("Rejuvenecé y Adelgazá después de los 50");
+    expect(m.html).not.toContain("ACTIVAR MI PLAN");
   });
 });

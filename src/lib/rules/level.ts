@@ -2,9 +2,9 @@ import type { Answers } from "@/funnel/types";
 
 /**
  * Nivel del plan según:
- *  - paso "inactividad" (hace cuánto no hace actividad),
- *  - paso "sensacion" (cómo se siente al hacer ejercicio),
- *  - paso "sintomas" (molestias que marcó).
+ *  - paso "molestias" (dónde siente molestias al moverse),
+ *  - paso "edad",
+ *  - paso "cuerpo" (cómo describe su cuerpo).
  * Puntaje >= SUAVE_THRESHOLD → "suave"; si no, "intermedio".
  * Ante la duda, suave: es más seguro empezar despacio.
  */
@@ -17,27 +17,20 @@ export const LEVEL_LABELS: Record<Level, string> = {
 
 export const SUAVE_THRESHOLD = 2;
 
-const INACTIVITY_POINTS: Record<string, number> = { lt6m: 0, "1-2y": 1, "3y+": 2, nunca: 2 };
-const FEELING_POINTS: Record<string, number> = { molestias: 2, cansancio: 1, bien: 0 };
-const SYMPTOM_POINTS: Record<string, number> = {
-  "dolor-articular": 1,
-  "suelo-pelvico": 1,
-  cansancio: 1,
-};
-const MAX_SYMPTOM_POINTS = 2;
+const AGE_POINTS: Record<string, number> = { "40-49": 0, "50-54": 0, "55-59": 0, "60-64": 1, "65+": 2 };
+const BODY_POINTS: Record<string, number> = { regular: 0, flacido: 0, sobrepeso: 1 };
 
 export function levelScore(answers: Answers): number | null {
-  const inactivity = answers["inactividad"];
-  const feeling = answers["sensacion"];
-  if (typeof inactivity !== "string" && typeof feeling !== "string") return null;
+  const discomfort = answers["molestias"];
+  const age = answers["edad"];
+  const body = answers["cuerpo"];
+  if (typeof discomfort !== "string" && typeof age !== "string" && typeof body !== "string") return null;
 
   let score = 0;
-  if (typeof inactivity === "string") score += INACTIVITY_POINTS[inactivity] ?? 0;
-  if (typeof feeling === "string") score += FEELING_POINTS[feeling] ?? 0;
-
-  const symptoms = Array.isArray(answers["sintomas"]) ? answers["sintomas"] : [];
-  const sym = symptoms.reduce((acc, id) => acc + (SYMPTOM_POINTS[id] ?? 0), 0);
-  score += Math.min(sym, MAX_SYMPTOM_POINTS);
+  // Cualquier molestia (rodillas, cadera, espalda, pies) ya alcanza para arrancar suave.
+  if (typeof discomfort === "string" && discomfort !== "ninguna") score += 2;
+  if (typeof age === "string") score += AGE_POINTS[age] ?? 0;
+  if (typeof body === "string") score += BODY_POINTS[body] ?? 0;
   return score;
 }
 

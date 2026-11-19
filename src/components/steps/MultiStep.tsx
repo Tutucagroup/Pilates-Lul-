@@ -45,6 +45,7 @@ export function MultiStepView({ step, value, onAnswer, onNext }: Props) {
                 ) : null}
                 <span className="flex min-h-12 items-center gap-2 px-3 py-2 text-[15px] font-bold">
                   <Check on={on} />
+                  {o.emoji ? <span aria-hidden="true">{o.emoji}</span> : null}
                   {o.label}
                 </span>
               </button>

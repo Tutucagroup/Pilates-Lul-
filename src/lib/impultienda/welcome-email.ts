@@ -21,20 +21,11 @@ export function escapeHtml(s: string): string {
   return s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 }
 
-export type Activation = {
-  /** Nombre del plan adicional, p. ej. "Rejuvenecé después de los 50". */
-  planName: string;
-  /** Link a la pantalla de activación de la app, con el email ya escrito (va después del #). */
-  url: string;
-};
-
 export type WelcomeEmailInput = {
   firstName: string;
   email: string;
   appUrl: string;
   logoUrl: string;
-  /** Planes adicionales que compró en la misma orden (order bump). */
-  activations?: Activation[];
   /** true = aviso de prueba del panel de Impultienda: el asunto lo dice. */
   test?: boolean;
 };
@@ -62,25 +53,6 @@ const box = (html: string) =>
   </table>`;
 
 
-/** Bloque del mail con el botón para activar un plan adicional. */
-function activationBlock(a: Activation, email: string): string {
-  return [
-    h2(`🔓 Tu plan ${escapeHtml(a.planName)}`),
-    p("Este plan se activa <strong>una sola vez</strong> en cada celular o compu donde uses la app. Tocá el botón y confirmá tu email:"),
-    button("ACTIVAR MI PLAN", a.url),
-    box(
-      `Si usás la app instalada en el celular (el ícono de la pantalla de inicio), activalo desde adentro: <strong>Programa → ${escapeHtml(a.planName)}</strong>, y escribí el email con el que compraste: <strong>${escapeHtml(email)}</strong>.`,
-    ),
-  ].join("\n");
-}
-
-function activationText(a: Activation, email: string): string {
-  return `TU PLAN ${a.planName.toUpperCase()}
-Activalo una sola vez en cada celular o compu donde uses la app: ${a.url}
-Si usás la app instalada en el celular: Programa > ${a.planName}, y escribí el email con el que compraste (${email}).
-
-`;
-}
 
 function layout(subject: string, preheader: string, body: string, logoUrl: string): string {
   return `<!DOCTYPE html>
@@ -120,11 +92,10 @@ export function welcomeEmail(i: WelcomeEmailInput): { subject: string; html: str
   const email = escapeHtml(i.email);
   const app = escapeHtml(i.appUrl);
 
-  const acts = i.activations ?? [];
   const body = [
     p(hello, "font-size:18px;font-weight:700;"),
     p(
-      `<strong>Tu compra se confirmó con éxito.</strong> ¡Gracias por sumarte al Reto de 28 días de Pilates Asiático${acts.length ? ` y a ${acts.map((a) => escapeHtml(a.planName)).join(" y ")}` : ""}! Desde hoy formás parte de la comunidad de Pilates Lulú y estamos muy felices de acompañarte.`,
+      `<strong>Tu compra se confirmó con éxito.</strong> ¡Gracias por sumarte a Pilates Asiático - Reto 28 días y a Rejuvenecé y Adelgazá después de los 50! Desde hoy formás parte de la comunidad de Pilates Lulú y estamos muy felices de acompañarte.`,
     ),
     h2("👉 Tu acceso"),
     p("Entrá a tu app de alumna desde este botón:"),
@@ -139,11 +110,11 @@ export function welcomeEmail(i: WelcomeEmailInput): { subject: string; html: str
     p("Adentro vas a encontrar:", "margin-bottom:8px;"),
     list([
       "Una clase en video para cada día del reto, a tu ritmo y desde tu casa.",
+      "El plan <strong>Rejuvenecé y Adelgazá después de los 50</strong>: 20 rutinas cortas para quemar grasa y tonificar todo el cuerpo. Lo elegís en <strong>Programa</strong>.",
       "Tu plan de comidas con recetas simples.",
       "Tu progreso y tu racha de días.",
       "Una coach virtual para resolver tus dudas.",
     ]),
-    ...acts.map((a) => activationBlock(a, i.email)),
     h2("📲 Tené tu app en el celular"),
     p("Guardá el acceso directo en la pantalla de inicio y vas a entrar con un solo toque, sin buscar este mail."),
     h3("Si tenés iPhone (Safari)"),
@@ -185,14 +156,19 @@ export function welcomeEmail(i: WelcomeEmailInput): { subject: string; html: str
 
   const text = `${i.firstName ? `¡Hola, ${i.firstName}!` : "¡Hola!"}
 
-Tu compra se confirmó con éxito. ¡Gracias por sumarte al Reto de 28 días de Pilates Asiático${acts.length ? ` y a ${acts.map((a) => a.planName).join(" y ")}` : ""}!
+Tu compra se confirmó con éxito. ¡Gracias por sumarte a Pilates Asiático - Reto 28 días y a Rejuvenecé y Adelgazá después de los 50!
 
 TU ACCESO
 Entrá a tu app de alumna: ${i.appUrl}
 
 Importante: tu acceso está habilitado solo para el email con el que hiciste la compra (${i.email}). Cuando entres, usá siempre ese mismo email. Por eso te pedimos que no compartas tu link: es personal.
 
-${acts.map((a) => activationText(a, i.email)).join("\n")}TENÉ TU APP EN EL CELULAR
+ADENTRO VAS A ENCONTRAR
+- Una clase en video para cada día del reto.
+- El plan Rejuvenecé y Adelgazá después de los 50: 20 rutinas cortas para quemar grasa y tonificar todo el cuerpo (lo elegís en Programa).
+- Tu plan de comidas, tu progreso y una coach virtual.
+
+TENÉ TU APP EN EL CELULAR
 iPhone (Safari): abrí el link desde Safari > Compartir > "Agregar a pantalla de inicio" > "Agregar".
 Android (Chrome): abrí el link desde Chrome > tres puntitos > "Agregar a la pantalla principal" (o "Instalar app") > "Agregar".
 Si lo abriste desde Instagram, Facebook o el mail, tocá los tres puntitos y elegí "Abrir en el navegador".
@@ -209,41 +185,5 @@ Lulú y el equipo de Pilates Lulú
 Recordá consultar con tu médico antes de empezar cualquier actividad física si tenés alguna lesión o condición de salud. Los resultados varían según cada persona.
 `;
 
-  return { subject, html: layout(subject, preheader, body, i.logoUrl), text };
-}
-
-export type AddonEmailInput = {
-  firstName: string;
-  email: string;
-  appUrl: string;
-  logoUrl: string;
-  activations: Activation[];
-  test?: boolean;
-};
-
-/** Mail para quien compra solo un plan adicional (upsell post-compra o con su link propio). */
-export function addonEmail(i: AddonEmailInput): { subject: string; html: string; text: string } {
-  const names = i.activations.map((a) => a.planName).join(" y ");
-  const subject = `${i.test ? "[Prueba] " : ""}Sumaste ${names} 🌸 Activalo en tu app`;
-  const preheader = "Un toque y el plan nuevo queda en tu app.";
-  const hello = i.firstName ? `¡Hola, ${escapeHtml(i.firstName)}!` : "¡Hola!";
-  const body = [
-    p(hello, "font-size:18px;font-weight:700;"),
-    p(`<strong>Tu compra se confirmó con éxito.</strong> ¡Gracias por sumar ${escapeHtml(names)}! Con el reto de 28 días ya tenés el programa completo de Pilates Lulú.`),
-    ...i.activations.map((a) => activationBlock(a, i.email)),
-    p(`Tu app sigue en el mismo lugar de siempre: <a href="${escapeHtml(i.appUrl)}" style="color:${C.rose};">${escapeHtml(i.appUrl)}</a>`, `font-size:14px;color:${C.muted};`),
-    p("Con mucho cariño,<br><strong>Lulú y el equipo de Pilates Lulú</strong> 💛"),
-  ].join("\n");
-  const text = `${i.firstName ? `¡Hola, ${i.firstName}!` : "¡Hola!"}
-
-Tu compra se confirmó con éxito. ¡Gracias por sumar ${names}!
-
-${i.activations.map((a) => activationText(a, i.email)).join("\n")}Tu app: ${i.appUrl}
-
-Con mucho cariño,
-Lulú y el equipo de Pilates Lulú
-
-¿Tenés alguna duda o no podés entrar? Respondé este mail y te ayudamos.
-`;
   return { subject, html: layout(subject, preheader, body, i.logoUrl), text };
 }

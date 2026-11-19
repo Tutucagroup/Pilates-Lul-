@@ -12,7 +12,7 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ step: string }> }): Promise<Metadata> {
   const { step } = await params;
   // Solo la portada se indexa.
-  return { robots: { index: false, follow: false }, alternates: step === "oferta" ? undefined : { canonical: "/" } };
+  return { robots: { index: false, follow: false }, alternates: step === "resultado" ? undefined : { canonical: "/" } };
 }
 
 export default async function StepPage({ params }: { params: Promise<{ step: string }> }) {

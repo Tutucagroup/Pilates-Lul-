@@ -8,34 +8,76 @@ import { Faq } from "./Faq";
 import { PriceBox } from "./PriceBox";
 import { ReviewList } from "./ReviewList";
 import { TestimonialCarousel } from "./TestimonialCarousel";
-import { UpsellBump } from "./UpsellBump";
 import { Urgency } from "./Urgency";
 
-type Props = { summary: PlanSummary; hydrated: boolean; stepIndex: number; stepName: string };
+type BuyProps = {
+  summary: PlanSummary;
+  stepId: string;
+  stepIndex: number;
+  stepName: string;
+  position: "top" | "bottom";
+  label: string;
+};
 
-/** Página de venta. Todo el contenido sale de funnel.config.ts (offer) y brand.config.ts. */
-export function OfferStepView({ summary, hydrated, stepIndex, stepName }: Props) {
+/** Los 2 programas que incluye la compra, con su cantidad de clases. */
+function IncludedPrograms() {
+  const { program, includedProgram: extra } = brand;
+  const items = [
+    { name: program.productName, detail: `${program.days} clases · 1 por día` },
+    { name: extra.name, detail: `${extra.classes} clases · ${extra.perWeek} por semana` },
+  ];
+  return (
+    <div className="mt-4 rounded-3xl bg-brand-soft p-4">
+      <p className="text-center text-[13px] font-extrabold uppercase tracking-[0.12em] text-brand">
+        Incluye los 2 programas
+      </p>
+      <ul className="mt-3 space-y-2">
+        {items.map((it) => (
+          <li key={it.name} className="flex items-start gap-3">
+            <span aria-hidden="true" className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-price text-[13px] font-bold text-white">✓</span>
+            <span>
+              <span className="block font-bold leading-snug">{it.name}</span>
+              <span className="block text-[14px] text-muted">{it.detail}</span>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+/** Precio (los 2 programas) + botón que lleva directo al checkout de Impultienda. */
+export function BuyBlock({ summary, stepId, stepIndex, stepName, position, label }: BuyProps) {
+  return (
+    <>
+      {position === "top" ? <Urgency /> : null}
+      <PriceBox />
+      <IncludedPrograms />
+      <div className="mt-4">
+        <BuyButton label={label} level={summary.level} stepId={stepId} stepIndex={stepIndex} stepName={stepName} position={position} />
+      </div>
+      <p className="mt-2 text-center text-[14px] text-muted">{funnel.offer.checkoutNote}</p>
+    </>
+  );
+}
+
+type Props = { summary: PlanSummary; hydrated: boolean; stepId: string; stepIndex: number; stepName: string };
+
+/**
+ * Explicación de venta que va debajo del resultado: beneficios, cómo funciona, qué incluye,
+ * testimonios, bonos, FAQ, segundo botón y garantía. Todo sale de funnel.config.ts (offer).
+ */
+export function OfferDetails({ summary, hydrated, stepId, stepIndex, stepName }: Props) {
   const o = funnel.offer;
   // Antes de rehidratar mostramos la versión genérica (sin respuestas) para no parpadear datos.
-  const s = hydrated ? summary : { ...summary, goalLabel: null, zoneLabels: [], levelLabel: summary.levelLabel };
   const benefits = (hydrated ? summary.benefitIds : o.benefits.map((b) => b.id))
     .map((id) => o.benefits.find((b) => b.id === id)!)
     .slice(0, 4);
-  const buy = (position: "top" | "bottom", label: string) => (
-    <BuyButton label={label} level={summary.level} stepIndex={stepIndex} stepName={stepName} position={position} />
-  );
 
   return (
-    <article className="pb-6">
-      {/* Titular con el resultado */}
-      <header className="text-center animate-fade-up">
-        <p className="text-[13px] font-extrabold uppercase tracking-[0.14em] text-brand">Tu plan personalizado</p>
-        <h1 className="mt-2 text-[28px] font-extrabold leading-tight">{o.headline(s)}</h1>
-        <p className="mt-2 text-[17px] text-muted">{o.subheadline(s)}</p>
-      </header>
-
+    <div className="pb-6">
       {/* Beneficios ordenados según sus respuestas */}
-      <section aria-labelledby="beneficios" className="mt-8">
+      <section aria-labelledby="beneficios" className="mt-10">
         <h2 id="beneficios" className="text-[22px] font-extrabold">{o.benefitsTitle}</h2>
         <ul className="mt-4 grid gap-3">
           {benefits.map((b) => (
@@ -76,15 +118,6 @@ export function OfferStepView({ summary, hydrated, stepIndex, stepName }: Props)
         </ul>
       </section>
 
-      {/* Precio + botón */}
-      <section id="comprar" aria-label="Precio" className="mt-10 scroll-mt-20">
-        <Urgency />
-        <PriceBox />
-        <UpsellBump />
-        <div className="mt-4">{buy("top", o.cta)}</div>
-        <p className="mt-2 text-center text-[14px] text-muted">{o.checkoutNote}</p>
-      </section>
-
       {/* Mockup del producto */}
       <div className="mt-10 overflow-hidden rounded-3xl">
         <Image
@@ -123,9 +156,7 @@ export function OfferStepView({ summary, hydrated, stepIndex, stepName }: Props)
 
       {/* Segundo botón */}
       <section aria-label="Comprar" className="mt-10">
-        <PriceBox />
-        <UpsellBump />
-        <div className="mt-4">{buy("bottom", o.ctaSecondary)}</div>
+        <BuyBlock summary={summary} stepId={stepId} stepIndex={stepIndex} stepName={stepName} position="bottom" label={o.ctaSecondary} />
       </section>
 
       {/* Garantía */}
@@ -149,6 +180,6 @@ export function OfferStepView({ summary, hydrated, stepIndex, stepName }: Props)
           Este programa no reemplaza la consulta con un profesional de la salud. Las imágenes son ilustrativas.
         </p>
       </footer>
-    </article>
+    </div>
   );
 }
