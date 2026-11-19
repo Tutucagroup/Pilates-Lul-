@@ -51,7 +51,7 @@ const c = (
 
 const pilates28: Plan = {
   id: "pilates28",
-  name: "Pilates Asiático · 28 días",
+  name: "Pilates Asiático - Reto 28 días",
   subtitle: "Una clase por día durante cuatro semanas",
   perWeek: 7,
   weeks: [
@@ -113,7 +113,7 @@ const block = (start: number, rows: [string, number, string, string][], cat: Cat
 
 const rejuvenece: Plan = {
   id: "rejuvenece",
-  name: "Rejuvenecé después de los 50",
+  name: "Rejuvenecé y Adelgazá después de los 50",
   subtitle: "Quemá grasa y tonificá todo el cuerpo",
   perWeek: 5,
   // Incluido en la compra del reto (no se vende aparte): sin `addon`, queda abierto para todas.

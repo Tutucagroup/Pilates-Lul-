@@ -119,8 +119,8 @@ describe("welcomeEmail", () => {
   });
   it("menciona los 2 programas incluidos y ya no pide activar nada", () => {
     const m = welcomeEmail(base);
-    expect(m.html).toContain("y a Rejuvenecé después de los 50");
-    expect(m.text).toContain("Rejuvenecé después de los 50");
+    expect(m.html).toContain("a Pilates Asiático - Reto 28 días y a Rejuvenecé y Adelgazá después de los 50");
+    expect(m.text).toContain("Rejuvenecé y Adelgazá después de los 50");
     expect(m.html).not.toContain("ACTIVAR MI PLAN");
   });
 });

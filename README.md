@@ -226,7 +226,7 @@ Qué hace con cada venta:
 - Si falla el envío del mail, responde 502 e Impultienda reintenta durante ~32 h.
 
 ### 4 · Los 2 programas en un solo producto ($19.900)
-El reto de 28 días y "Rejuvenecé después de los 50" **no se venden por separado**: los dos vienen en el producto principal de $19.900.
+El reto de 28 días y "Rejuvenecé y Adelgazá después de los 50" **no se venden por separado**: los dos vienen en el producto principal de $19.900.
 
 - **Quiz:** junto al precio, la tarjeta "Incluye los 2 programas" (`brand.config.ts → includedProgram`). También están en "Qué incluye" y en la FAQ. No hay order bump.
 - **Checkout:** un solo producto. El upsell viejo de Impultienda (`50ea7b14-43ec-4901-b615-f81b4da73143`, $5.900) tiene que quedar **desactivado** para que el checkout no lo ofrezca aparte.

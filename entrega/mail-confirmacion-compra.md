@@ -8,7 +8,7 @@
 
 ¡Hola, {nombre}!
 
-**Tu compra se confirmó con éxito.** ¡Gracias por sumarte al Reto de 28 días de Pilates Asiático y a Rejuvenecé después de los 50! Desde hoy formás parte de la comunidad de Pilates Lulú y estamos muy felices de acompañarte.
+**Tu compra se confirmó con éxito.** ¡Gracias por sumarte a Pilates Asiático - Reto 28 días y a Rejuvenecé y Adelgazá después de los 50! Desde hoy formás parte de la comunidad de Pilates Lulú y estamos muy felices de acompañarte.
 
 ## 👉 Tu acceso
 
@@ -24,7 +24,7 @@ O copiá este link en tu navegador: https://app-alumnas.vercel.app
 Adentro vas a encontrar:
 
 - Una clase en video para cada día del reto, a tu ritmo y desde tu casa.
-- El plan **Rejuvenecé después de los 50**: 20 rutinas cortas para quemar grasa y tonificar todo el cuerpo. Lo elegís en **Programa**.
+- El plan **Rejuvenecé y Adelgazá después de los 50**: 20 rutinas cortas para quemar grasa y tonificar todo el cuerpo. Lo elegís en **Programa**.
 - Tu plan de comidas con recetas simples.
 - Tu progreso y tu racha de días.
 - Una coach virtual para resolver tus dudas.

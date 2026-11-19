@@ -157,7 +157,7 @@ export const funnel: FunnelConfig = {
 
     // ⚠️ Revisá que esta lista coincida EXACTAMENTE con lo que entregás.
     includes: [
-      `${program.days} clases guiadas en video de ${program.minutesPerDay} minutos (${program.name})`,
+      `${program.days} clases guiadas en video de ${program.minutesPerDay} minutos («${program.productName}»)`,
       `${includedProgram.classes} clases más del programa «${includedProgram.name}»: ${includedProgram.tagline.toLowerCase()}`,
       "Calendario día por día para no tener que pensar qué hacer",
       "Explicación clara de cada movimiento, con opciones más suaves",
@@ -233,7 +233,7 @@ export const funnel: FunnelConfig = {
     faq: [
       {
         q: "¿Qué incluye la compra?",
-        a: `Los 2 programas, en un solo pago: el ${program.name} de ${brand.method} (${program.days} clases) y «${includedProgram.name}» (${includedProgram.classes} clases, ${includedProgram.perWeek} por semana durante ${includedProgram.weeks} semanas). Los dos quedan en tu app desde el primer día.`,
+        a: `Los 2 programas, en un solo pago: «${program.productName}» (${program.days} clases) y «${includedProgram.name}» (${includedProgram.classes} clases, ${includedProgram.perWeek} por semana durante ${includedProgram.weeks} semanas). Los dos quedan en tu app desde el primer día.`,
       },
       {
         q: "¿Necesito experiencia previa?",

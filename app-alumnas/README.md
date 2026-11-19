@@ -21,8 +21,8 @@ La app trae dos planes, con videos del canal de YouTube "Fuerte después de los 
 
 | Plan | Clases | Lista de YouTube de origen |
 |---|---|---|
-| Pilates Asiático · 28 días | 28 (una por día) | "Reto 28 Días Pilates. Fuerte Después de los 50!" |
-| Rejuvenecé después de los 50 | 20 (5 por semana, 4 semanas) | "Reto Pilates - Mes 1" (semanas 1 y 2) y "Mes 2" (semanas 3 y 4) |
+| Pilates Asiático - Reto 28 días | 28 (una por día) | "Reto 28 Días Pilates. Fuerte Después de los 50!" |
+| Rejuvenecé y Adelgazá después de los 50 | 20 (5 por semana, 4 semanas) | "Reto Pilates - Mes 1" (semanas 1 y 2) y "Mes 2" (semanas 3 y 4) |
 
 Todo está en `src/data/program.ts`. Para cambiar un video, reemplazá el ID (lo que va después de `v=` en el enlace de YouTube). Ahí mismo se editan título, duración, descripción y elementos necesarios de cada clase.
 
@@ -43,7 +43,7 @@ Los videos se reproducen con el reproductor de YouTube: si un video se borra, se
 
 ## Los 2 planes (incluidos en la compra)
 
-"Pilates Asiático · 28 días" y "Rejuvenecé después de los 50" se venden **juntos**, en un solo producto de $19.900. Los dos están abiertos para todas en **Programa**: no hay candado ni nada que activar.
+"Pilates Asiático - Reto 28 días" y "Rejuvenecé y Adelgazá después de los 50" se venden **juntos**, en un solo producto de $19.900. Los dos están abiertos para todas en **Programa**: no hay candado ni nada que activar.
 
 - El soporte para planes adicionales sigue en el código por si algún día se vende uno aparte: un plan con `addon: { price, buyUrl }` en `src/data/program.ts` aparece con candado hasta que se activa en `/activar` con el email de compra (consulta Vercel Blob vía `/api/activar`, con `BLOB_READ_WRITE_TOKEN` y `ACTIVATION_SECRET`, el mismo valor que en la landing).
 - Hoy ningún plan tiene `addon`, así que `/activar` solo avisa que los 2 programas ya están incluidos (por si alguien entra con el link de un mail viejo).

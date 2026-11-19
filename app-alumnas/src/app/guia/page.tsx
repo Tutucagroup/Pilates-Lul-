@@ -6,7 +6,7 @@ const sections = [
     title: "Cómo funciona",
     items: [
       "Hay dos planes. Elegí uno en Programa; podés cambiar cuando quieras.",
-      "Pilates Asiático · 28 días: una clase por día. Rejuvenecé después de los 50: cinco rutinas cortas por semana.",
+      "Pilates Asiático - Reto 28 días: una clase por día. Rejuvenecé y Adelgazá después de los 50: cinco rutinas cortas por semana.",
       "Al terminar la clase, marcala como hecha para habilitar la siguiente.",
       "Tenés un día libre por semana sin perder la racha.",
     ],

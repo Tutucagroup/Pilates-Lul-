@@ -23,7 +23,7 @@ type BuyProps = {
 function IncludedPrograms() {
   const { program, includedProgram: extra } = brand;
   const items = [
-    { name: `${program.name} de ${brand.method}`, detail: `${program.days} clases · 1 por día` },
+    { name: program.productName, detail: `${program.days} clases · 1 por día` },
     { name: extra.name, detail: `${extra.classes} clases · ${extra.perWeek} por semana` },
   ];
   return (

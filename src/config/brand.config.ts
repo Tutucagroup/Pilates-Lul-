@@ -34,6 +34,8 @@ export const brand = {
 
   program: {
     name: "Reto de 28 días",
+    /** Nombre del producto tal como se vende (checkout de Impultienda, app de alumnas, mails). */
+    productName: "Pilates Asiático - Reto 28 días",
     days: 28,
     minutesPerDay: 15,
     /** ID del plan del reto en la app de alumnas (app-alumnas/src/data/program.ts). */
@@ -61,7 +63,7 @@ export const brand = {
   includedProgram: {
     /** ID del plan en la app de alumnas (app-alumnas/src/data/program.ts). */
     planId: "rejuvenece",
-    name: "Rejuvenecé después de los 50",
+    name: "Rejuvenecé y Adelgazá después de los 50",
     tagline: "Quema grasa y tonifica todo el cuerpo",
     classes: 20,
     perWeek: 5,

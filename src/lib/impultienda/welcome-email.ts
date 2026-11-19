@@ -95,7 +95,7 @@ export function welcomeEmail(i: WelcomeEmailInput): { subject: string; html: str
   const body = [
     p(hello, "font-size:18px;font-weight:700;"),
     p(
-      `<strong>Tu compra se confirmó con éxito.</strong> ¡Gracias por sumarte al Reto de 28 días de Pilates Asiático y a Rejuvenecé después de los 50! Desde hoy formás parte de la comunidad de Pilates Lulú y estamos muy felices de acompañarte.`,
+      `<strong>Tu compra se confirmó con éxito.</strong> ¡Gracias por sumarte a Pilates Asiático - Reto 28 días y a Rejuvenecé y Adelgazá después de los 50! Desde hoy formás parte de la comunidad de Pilates Lulú y estamos muy felices de acompañarte.`,
     ),
     h2("👉 Tu acceso"),
     p("Entrá a tu app de alumna desde este botón:"),
@@ -110,7 +110,7 @@ export function welcomeEmail(i: WelcomeEmailInput): { subject: string; html: str
     p("Adentro vas a encontrar:", "margin-bottom:8px;"),
     list([
       "Una clase en video para cada día del reto, a tu ritmo y desde tu casa.",
-      "El plan <strong>Rejuvenecé después de los 50</strong>: 20 rutinas cortas para quemar grasa y tonificar todo el cuerpo. Lo elegís en <strong>Programa</strong>.",
+      "El plan <strong>Rejuvenecé y Adelgazá después de los 50</strong>: 20 rutinas cortas para quemar grasa y tonificar todo el cuerpo. Lo elegís en <strong>Programa</strong>.",
       "Tu plan de comidas con recetas simples.",
       "Tu progreso y tu racha de días.",
       "Una coach virtual para resolver tus dudas.",
@@ -156,7 +156,7 @@ export function welcomeEmail(i: WelcomeEmailInput): { subject: string; html: str
 
   const text = `${i.firstName ? `¡Hola, ${i.firstName}!` : "¡Hola!"}
 
-Tu compra se confirmó con éxito. ¡Gracias por sumarte al Reto de 28 días de Pilates Asiático y a Rejuvenecé después de los 50!
+Tu compra se confirmó con éxito. ¡Gracias por sumarte a Pilates Asiático - Reto 28 días y a Rejuvenecé y Adelgazá después de los 50!
 
 TU ACCESO
 Entrá a tu app de alumna: ${i.appUrl}
@@ -165,7 +165,7 @@ Importante: tu acceso está habilitado solo para el email con el que hiciste la 
 
 ADENTRO VAS A ENCONTRAR
 - Una clase en video para cada día del reto.
-- El plan Rejuvenecé después de los 50: 20 rutinas cortas para quemar grasa y tonificar todo el cuerpo (lo elegís en Programa).
+- El plan Rejuvenecé y Adelgazá después de los 50: 20 rutinas cortas para quemar grasa y tonificar todo el cuerpo (lo elegís en Programa).
 - Tu plan de comidas, tu progreso y una coach virtual.
 
 TENÉ TU APP EN EL CELULAR
