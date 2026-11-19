@@ -116,7 +116,7 @@ const rejuvenece: Plan = {
   name: "Rejuvenecé después de los 50",
   subtitle: "Quemá grasa y tonificá todo el cuerpo",
   perWeek: 5,
-  addon: { price: 5900, buyUrl: "https://pilates-lulu.impultienda.ar/checkout?p=50ea7b14-43ec-4901-b615-f81b4da73143" },
+  // Incluido en la compra del reto (no se vende aparte): sin `addon`, queda abierto para todas.
   weeks: [
     { name: "Fortalecer", text: "Cinco rutinas cortas, de lunes a viernes." },
     { name: "Fortalecer", text: "Repetís las cinco rutinas. Vas a notar que salen mejor." },

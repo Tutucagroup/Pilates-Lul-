@@ -18,7 +18,7 @@ import { brand } from "./brand.config";
 import type { FunnelConfig } from "@/funnel/types";
 import { joinEs } from "@/lib/format";
 
-const { program } = brand;
+const { program, includedProgram } = brand;
 
 export const funnel: FunnelConfig = {
   storageKey: "pilates-lulu-quiz-v2",
@@ -157,7 +157,8 @@ export const funnel: FunnelConfig = {
 
     // ⚠️ Revisá que esta lista coincida EXACTAMENTE con lo que entregás.
     includes: [
-      `${program.days} clases guiadas en video de ${program.minutesPerDay} minutos`,
+      `${program.days} clases guiadas en video de ${program.minutesPerDay} minutos (${program.name})`,
+      `${includedProgram.classes} clases más del programa «${includedProgram.name}»: ${includedProgram.tagline.toLowerCase()}`,
       "Calendario día por día para no tener que pensar qué hacer",
       "Explicación clara de cada movimiento, con opciones más suaves",
       "Acceso desde el celular, la tablet o la computadora",
@@ -230,6 +231,10 @@ export const funnel: FunnelConfig = {
     ],
 
     faq: [
+      {
+        q: "¿Qué incluye la compra?",
+        a: `Los 2 programas, en un solo pago: el ${program.name} de ${brand.method} (${program.days} clases) y «${includedProgram.name}» (${includedProgram.classes} clases, ${includedProgram.perWeek} por semana durante ${includedProgram.weeks} semanas). Los dos quedan en tu app desde el primer día.`,
+      },
       {
         q: "¿Necesito experiencia previa?",
         a: "No. El plan arranca desde cero y cada movimiento tiene una opción más suave.",

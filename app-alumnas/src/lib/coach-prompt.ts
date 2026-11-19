@@ -34,7 +34,7 @@ ${p.weeks.map((w, i) => `Semana ${i + 1}, ${w.name}: ${w.text}`).join("\n")}
 Clases (día, título, tipo, duración, elementos):
 ${p.classes.map((c) => `Día ${c.day}. ${c.title}. ${c.category}, ${c.minutes} min.${c.needs ? ` Necesita: ${c.needs}.` : ""}`).join("\n")}`).join("\n\n")}
 
-Reglas: dentro de cada plan las clases se habilitan en orden, al marcar la anterior como hecha. Hay un día libre por semana que no corta la racha. Las clases hechas se pueden repetir. Se cambia de plan desde la pantalla Programa, y el avance de cada plan se guarda por separado. Un plan se reinicia desde Más, Mi perfil. Un plan adicional se activa en la pantalla Programa, tocando el plan con candado: se escribe el email con el que se pagó. Si no lo tiene, en esa misma pantalla puede comprarlo. Si dice que lo compró y no se activa, pedile que revise que sea el mismo email de la compra y, si sigue sin andar, que escriba al equipo; no prometas accesos ni descuentos.
+Reglas: dentro de cada plan las clases se habilitan en orden, al marcar la anterior como hecha. Hay un día libre por semana que no corta la racha. Las clases hechas se pueden repetir. Se cambia de plan desde la pantalla Programa, y el avance de cada plan se guarda por separado. Un plan se reinicia desde Más, Mi perfil. Los dos planes vienen incluidos en la compra del reto: no hay nada que activar ni que comprar aparte. Si no ve alguno, que actualice la app y, si sigue sin verlo, que escriba al equipo; no prometas accesos ni descuentos.
 
 RECETAS DE LA APP
 ${recipes.map((r) => `${r.name} (${mealLabel[r.meal]}, ${r.minutes} min, ${r.tags.join(", ")})`).join("\n")}

@@ -8,7 +8,6 @@ import { Faq } from "./Faq";
 import { PriceBox } from "./PriceBox";
 import { ReviewList } from "./ReviewList";
 import { TestimonialCarousel } from "./TestimonialCarousel";
-import { UpsellBump } from "./UpsellBump";
 import { Urgency } from "./Urgency";
 
 type BuyProps = {
@@ -20,13 +19,40 @@ type BuyProps = {
   label: string;
 };
 
-/** Precio + order bump + botón que lleva directo al checkout de Impultienda. */
+/** Los 2 programas que incluye la compra, con su cantidad de clases. */
+function IncludedPrograms() {
+  const { program, includedProgram: extra } = brand;
+  const items = [
+    { name: `${program.name} de ${brand.method}`, detail: `${program.days} clases · 1 por día` },
+    { name: extra.name, detail: `${extra.classes} clases · ${extra.perWeek} por semana` },
+  ];
+  return (
+    <div className="mt-4 rounded-3xl bg-brand-soft p-4">
+      <p className="text-center text-[13px] font-extrabold uppercase tracking-[0.12em] text-brand">
+        Incluye los 2 programas
+      </p>
+      <ul className="mt-3 space-y-2">
+        {items.map((it) => (
+          <li key={it.name} className="flex items-start gap-3">
+            <span aria-hidden="true" className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-price text-[13px] font-bold text-white">✓</span>
+            <span>
+              <span className="block font-bold leading-snug">{it.name}</span>
+              <span className="block text-[14px] text-muted">{it.detail}</span>
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+/** Precio (los 2 programas) + botón que lleva directo al checkout de Impultienda. */
 export function BuyBlock({ summary, stepId, stepIndex, stepName, position, label }: BuyProps) {
   return (
     <>
       {position === "top" ? <Urgency /> : null}
       <PriceBox />
-      <UpsellBump />
+      <IncludedPrograms />
       <div className="mt-4">
         <BuyButton label={label} level={summary.level} stepId={stepId} stepIndex={stepIndex} stepName={stepName} position={position} />
       </div>

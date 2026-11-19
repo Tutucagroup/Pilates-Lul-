@@ -3,7 +3,7 @@
 Funnel tipo cuestionario para el **Reto de 28 días de Pilates Asiático** (mujeres de 40 a 70 años, Argentina).
 5 preguntas → resultado personalizado con la venta en la misma pantalla → checkout de **Impultienda**.
 
-Preguntas: kilos a bajar · dónde siente molestias · edad · cómo describe su cuerpo · zonas a trabajar (varias). En la pantalla final el botón **"Ver mi plan"** va directo al checkout y está arriba de todo; debajo, la explicación del resultado y el resto de la venta (beneficios, qué incluye, testimonios, FAQ, segundo botón, garantía). `/q/oferta` redirige a `/q/resultado` para no romper links viejos.
+Preguntas: kilos a bajar · dónde siente molestias · edad · cómo describe su cuerpo · zonas a trabajar (varias). En la pantalla final el precio con los 2 programas incluidos y el botón **"Ver mi plan"** (directo al checkout) están arriba de todo; debajo, la explicación del resultado y el resto de la venta (beneficios, qué incluye, testimonios, FAQ, segundo botón, garantía). `/q/oferta` redirige a `/q/resultado` para no romper links viejos.
 
 **En vivo:** https://pilates-lul.vercel.app
 
@@ -221,30 +221,17 @@ Impultienda manda su mail de entrega fijo (con el link de cada producto). Ademá
 2. En Vercel → Settings → Environment Variables (Production): `IMPULTIENDA_WEBHOOK_SECRET` con esa clave. Después, **Redeploy**.
 
 Qué hace con cada venta:
-- **Anota qué planes compró la alumna** en Vercel Blob (almacenamiento privado `pilates-lulu-accesos`, ver `src/lib/entitlements.ts`). Con eso activa el plan adicional en la app (ver "Upsell").
+- **Anota qué planes compró la alumna** (el reto y Rejuvenecé) en Vercel Blob (almacenamiento privado `pilates-lulu-accesos`, ver `src/lib/entitlements.ts`). Hoy la app no lo pide para entrar; queda como registro.
 - **Mail de bienvenida propio (opcional):** solo sale si cargás un proveedor de mails (`RESEND_API_KEY` y `MAIL_FROM`). Sin eso, el webhook responde 200 y la alumna recibe solo el mail de entrega de Impultienda. El texto está en `src/lib/impultienda/welcome-email.ts` (fuente: `entrega/mail-confirmacion-compra.md`).
-- Si falla al guardar una compra con el upsell, responde 502/503 e Impultienda reintenta durante ~32 h.
+- Si falla el envío del mail, responde 502 e Impultienda reintenta durante ~32 h.
 
-### 4 · Upsell: Rejuvenecé después de los 50 ($5.900)
-El plan "Rejuvenecé después de los 50" de la app de alumnas es un producto aparte. Se ofrece como **order bump**: en la oferta del quiz (tarjeta "Sumalo a tu plan" debajo del precio) y otra vez dentro del checkout. Quien no lo sumó lo puede comprar después desde la app (botón "Sumalo por $5.900", que abre el link de compra propio del upsell). En la app queda con candado hasta que la alumna lo activa con el email de su compra.
+### 4 · Los 2 programas en un solo producto ($19.900)
+El reto de 28 días y "Rejuvenecé después de los 50" **no se venden por separado**: los dos vienen en el producto principal de $19.900.
 
-Cómo viaja:
-1. En el quiz la alumna tilda la tarjeta → el botón abre el checkout con `?upsells=<posición>` y el upsell ya agregado (lo puede destildar). Si no la tildó, el checkout igual se lo ofrece.
-2. Impultienda cobra y avisa al webhook con los `product_id` de la orden. Le manda a la alumna su mail de entrega: el del upsell trae el link a `https://app-alumnas.vercel.app/activar`.
-3. El webhook anota la compra en Vercel Blob: la ruta es un HMAC del email con `ACTIVATION_SECRET` (no se guarda el email).
-4. En la app, la alumna escribe su email de compra en `/activar`. La app consulta el almacenamiento (`app-alumnas/src/app/api/activar`) y desbloquea el plan en ese dispositivo.
-
-Estado actual:
-- Impultienda: el upsell ya está creado en Diseño de ebooks (ID `50ea7b14-43ec-4901-b615-f81b4da73143`, $5.900, entregable con link a `/activar`), con **«Disponible solo en post-compra» prendido** para que no aparezca en el checkout antes de tiempo. Su ID está en `brand.config.ts → upsell.productId` y su link de compra en `app-alumnas/src/data/program.ts → rejuvenece.addon.buyUrl`.
-- Vercel: `ACTIVATION_SECRET` y `BLOB_READ_WRITE_TOKEN` (almacenamiento `pilates-lulu-accesos`) ya están cargadas en los dos proyectos.
-
-Para prenderlo:
-1. Deploy de las dos apps con este código.
-2. Compra de prueba desde el botón de la app ("Sumalo por $5.900"): después de pagar, en `/activar` con el email de la compra el plan se tiene que desbloquear.
-3. En Impultienda apagá «Disponible solo en post-compra» del upsell: desde ahí aparece como bump en el checkout. Después poné `brand.config.ts → upsell.inCheckout: true` y deploy: recién ahí el quiz muestra la tarjeta para sumarlo. Revisá `upsell.checkoutPosition` (1 si es el único upsell).
-4. Compra de prueba desde el quiz con la tarjeta tildada: mismo chequeo en `/activar`.
-
-> Cualquiera que sepa el email de una compradora podría activar el plan en su propio celular, y el candado vive en el navegador. Alcanza para que el plan no se vea sin comprarlo, pero no es un control de acceso real (los videos además son públicos en YouTube). Para eso hacen falta cuentas con inicio de sesión.
+- **Quiz:** junto al precio, la tarjeta "Incluye los 2 programas" (`brand.config.ts → includedProgram`). También están en "Qué incluye" y en la FAQ. No hay order bump.
+- **Checkout:** un solo producto. El upsell viejo de Impultienda (`50ea7b14-43ec-4901-b615-f81b4da73143`, $5.900) tiene que quedar **desactivado** para que el checkout no lo ofrezca aparte.
+- **Webhook y mail:** cada compra del reto anota los 2 planes y el mail de bienvenida menciona los dos.
+- **App de alumnas:** los 2 planes están abiertos para todas en Programa (ver `app-alumnas/README.md`).
 
 ### 5 · Compra de prueba
 Hacé una compra de prueba y verificá que llegue el mail de entrega, que su botón abra la app y que la venta tenga las `utm_*`.

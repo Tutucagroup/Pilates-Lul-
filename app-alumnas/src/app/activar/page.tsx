@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { CheckCircle2, LockKeyhole, ShoppingBag } from "lucide-react";
@@ -81,7 +82,8 @@ export default function Activar() {
     return (
       <div className="animate-fade-up pt-1">
         <Back href="/programa" label="Programa" />
-        <PageTitle title="Activar un plan" subtitle="No hay planes adicionales para activar." />
+        <PageTitle title="Ya tenés todos los planes" subtitle="Los 2 programas vienen incluidos en tu compra: no hace falta activar nada." />
+        <Link href="/programa" className="mt-2 inline-flex font-bold text-brand underline">Ir a Programa</Link>
       </div>
     );
   }
