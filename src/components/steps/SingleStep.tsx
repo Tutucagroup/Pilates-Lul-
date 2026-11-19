@@ -53,7 +53,10 @@ export function SingleStepView({ step, value, answers, onAnswer, onNext, priorit
                 {o.image ? (
                   <Image src={o.image} alt="" width={240} height={320} sizes="(max-width: 448px) 30vw, 140px" className="aspect-[3/4] w-full object-cover" />
                 ) : null}
-                <span className="flex min-h-12 flex-1 items-center px-2 py-2 text-[14px] font-bold leading-tight">{o.label}</span>
+                <span className="flex min-h-12 flex-1 items-center justify-center gap-1 px-2 py-2 text-center text-[14px] font-bold leading-tight">
+                  {o.emoji ? <span aria-hidden="true">{o.emoji}</span> : null}
+                  {o.label}
+                </span>
               </button>
             );
           })}

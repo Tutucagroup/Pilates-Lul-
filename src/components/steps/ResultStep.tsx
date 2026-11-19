@@ -4,12 +4,13 @@ import { brand } from "@/config/brand.config";
 import type { ResultStep } from "@/funnel/types";
 import type { PlanSummary } from "@/lib/rules/summary";
 import { MAX_KG_PER_WEEK, MIN_KG_PER_WEEK } from "@/lib/rules/pace";
-import { decimalEs, formatDateEs, joinEs } from "@/lib/format";
+import { funnel } from "@/config/funnel.config";
+import { decimalEs, formatDateEs } from "@/lib/format";
 import { BmiScale } from "../BmiScale";
 import { PaceChart } from "../PaceChart";
-import { Button } from "../ui/Button";
+import { BuyBlock, OfferDetails } from "../offer/OfferDetails";
 
-type Props = { step: ResultStep; summary: PlanSummary; hydrated: boolean; onNext: () => void; onShown: () => void };
+type Props = { step: ResultStep; summary: PlanSummary; hydrated: boolean; stepIndex: number; onShown: () => void };
 
 function Row({ label, value }: { label: string; value: string }) {
   return (
@@ -20,8 +21,11 @@ function Row({ label, value }: { label: string; value: string }) {
   );
 }
 
-/** Resumen personalizado: objetivo, zonas, nivel, IMC y ritmo estimado. */
-export function ResultStepView({ step, summary: s, hydrated, onNext, onShown }: Props) {
+/**
+ * Pantalla final: arriba el plan resumido, el precio y el botón que va directo al checkout;
+ * abajo la explicación del resultado (objetivo, nivel, IMC, ritmo) y el resto de la venta.
+ */
+export function ResultStepView({ step, summary: s, hydrated, stepIndex, onShown }: Props) {
   const shown = useRef(false);
   useEffect(() => {
     if (hydrated && !shown.current) {
@@ -30,26 +34,33 @@ export function ResultStepView({ step, summary: s, hydrated, onNext, onShown }: 
     }
   }, [hydrated, onShown]);
 
-  const zones = s.zoneLabels.length ? joinEs(s.zoneLabels.map((z) => z.toLowerCase())) : null;
   const { program } = brand;
   const pace = s.pace;
+  // Antes de rehidratar mostramos el titular genérico (sin respuestas) para no parpadear datos.
+  const head = hydrated ? s : { ...s, goalLabel: null, zoneLabels: [], careText: null };
 
   return (
     <section className="animate-fade-up">
-      <h1 className="text-center text-[28px] font-extrabold leading-tight">{step.title}</h1>
-      <p className="mt-2 text-center text-[17px] text-muted">
-        Armamos un {program.name.toLowerCase()} de nivel <b className="text-ink">{s.levelLabel.toLowerCase()}</b>
-        {s.goalLabel ? <> para <b className="text-ink">{s.goalLabel.toLowerCase()}</b></> : null}
-        {zones ? <>, con foco en <b className="text-ink">{zones}</b></> : null}.
-      </p>
+      <header className="text-center">
+        <p className="text-[13px] font-extrabold uppercase tracking-[0.14em] text-brand">{step.title}</p>
+        <h1 className="mt-2 text-[28px] font-extrabold leading-tight">{funnel.offer.headline(head)}</h1>
+        <p className="mt-2 text-[17px] text-muted">{funnel.offer.subheadline(head)}</p>
+      </header>
 
-      <div className="mt-6 divide-y divide-black/5 rounded-3xl bg-white px-5 ring-1 ring-black/5">
+      {/* Botón al checkout, lo primero que se ve */}
+      <div id="comprar" className="mt-6 scroll-mt-20">
+        <BuyBlock summary={s} stepId={step.id} stepIndex={stepIndex} stepName={step.name} position="top" label={step.cta} />
+      </div>
+
+      {/* Explicación del resultado */}
+      <h2 className="mt-10 text-[22px] font-extrabold">Tu resultado</h2>
+      <div className="mt-4 divide-y divide-black/5 rounded-3xl bg-white px-5 ring-1 ring-black/5">
         {s.goalLabel ? <Row label="Tu objetivo" value={s.goalLabel} /> : null}
         {s.zoneLabels.length ? <Row label="Zonas" value={s.zoneLabels.join(" · ")} /> : null}
         <Row label="Nivel" value={s.levelLabel} />
         <Row label="Tiempo por día" value={`${program.minutesPerDay} minutos`} />
         <Row label="Duración" value={`${program.days} días`} />
-        {s.improveLabels.length ? <Row label="También vas a trabajar" value={s.improveLabels.join(" · ")} /> : null}
+        {s.careLabel ? <Row label="Cuidamos" value={s.careLabel} /> : null}
       </div>
 
       {s.bmi ? (
@@ -91,13 +102,11 @@ export function ResultStepView({ step, summary: s, hydrated, onNext, onShown }: 
 
       {s.hasDiscomfort ? (
         <p role="note" className="mt-4 rounded-2xl bg-amber-50 px-4 py-3 text-[15px] text-amber-900 ring-1 ring-amber-200">
-          Como mencionaste molestias, tu plan prioriza movimientos suaves. Si tenés una lesión o condición médica, consultá con tu médico antes de empezar.
+          Como mencionaste molestias{s.careText ? <> en {s.careText}</> : null}, tu plan prioriza movimientos suaves. Si tenés una lesión o condición médica, consultá con tu médico antes de empezar.
         </p>
       ) : null}
 
-      <div className="mt-6">
-        <Button onClick={onNext}>{step.cta}</Button>
-      </div>
+      <OfferDetails summary={s} hydrated={hydrated} stepId={step.id} stepIndex={stepIndex} stepName={step.name} />
     </section>
   );
 }

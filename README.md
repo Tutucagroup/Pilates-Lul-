@@ -1,7 +1,9 @@
 # Pilates Lulú · Funnel quiz + página de venta
 
 Funnel tipo cuestionario para el **Reto de 28 días de Pilates Asiático** (mujeres de 40 a 70 años, Argentina).
-19 pasos → resultado personalizado → página de venta → checkout de **Impultienda**.
+5 preguntas → resultado personalizado con la venta en la misma pantalla → checkout de **Impultienda**.
+
+Preguntas: kilos a bajar · dónde siente molestias · edad · cómo describe su cuerpo · zonas a trabajar (varias). En la pantalla final el botón **"Ver mi plan"** va directo al checkout y está arriba de todo; debajo, la explicación del resultado y el resto de la venta (beneficios, qué incluye, testimonios, FAQ, segundo botón, garantía). `/q/oferta` redirige a `/q/resultado` para no romper links viejos.
 
 **En vivo:** https://pilates-lul.vercel.app
 
@@ -48,7 +50,7 @@ src/lib/rules/                ← personalización: IMC, ritmo, nivel, orden de 
 src/lib/pricing.ts            ← descuento y cuotas calculados desde brand.config
 src/lib/checkout.ts           ← arma el link al checkout de Impultienda
 src/lib/tracking/             ← Pixel + CAPI + eventos a Supabase
-src/components/steps/         ← los 7 componentes de paso: single, multi, info, ruler, loader, result
+src/components/steps/         ← los componentes de paso: single, multi, info, ruler, loader, result
 src/components/offer/         ← página de venta (offer), precio, botón, testimonios, reseñas, FAQ, urgencia
 src/app/                      ← rutas: "/" (paso 1), "/q/[paso]", "/opinion", "/api/*"
 data/testimonials.json        ← testimonios y reseñas REALES (vacío = las secciones no se muestran)
@@ -100,13 +102,14 @@ Todo en `src/config/funnel.config.ts`. Cada paso es un objeto con `id`, `name` (
 | `info` | Refuerzo | `title`, `text`, `image`, `cta` |
 | `ruler` | Regla arrastrable cm/in o kg/lb | `measure: "height" \| "weight"`, `min`, `max`, `initial` (en métrico), `note`, `check` |
 | `loader` | Progreso animado que avanza solo | `title`, `messages`, `durationMs` |
-| `result` | Resumen personalizado | `title`, `cta` |
-| `offer` | Página de venta | (contenido en `funnel.offer`) |
+| `result` | Pantalla final: precio + botón al checkout arriba, explicación del resultado y venta abajo | `title`, `cta` (botón de arriba) |
+
+`info` y `ruler` no se usan en el quiz corto, pero siguen disponibles. Si volvés a sumar altura y peso (`altura`, `peso`, `peso-objetivo`), el resultado vuelve a mostrar el IMC y el ritmo estimado.
 
 - **Reordenar:** mové el objeto dentro de `steps`. La barra de progreso se recalcula sola.
 - **Agregar/quitar opciones:** editá `options`. Los `id` se guardan en Supabase y los usan las reglas: si cambiás un `id`, buscalo en `src/lib/rules/`.
-- **Saltear un paso según una respuesta:** `showIf: { stepId: "objetivo", anyOf: ["peso"] }`.
-- **Línea de aviso** (pasos `single`): `notes: [{ when: { stepId: "sensacion", anyOf: ["molestias"] }, text: "..." }]`. Si se dispara un aviso, el paso no avanza solo: muestra el aviso y un botón "Continuar".
+- **Saltear un paso según una respuesta:** `showIf: { stepId: "molestias", anyOf: ["rodillas"] }`.
+- **Línea de aviso** (pasos `single`): `notes: [{ when: { stepId: "molestias", anyOf: ["rodillas"] }, text: "..." }]`. Si se dispara un aviso, el paso no avanza solo: muestra el aviso y un botón "Continuar".
 - **Valor inicial derivado:** `initial: { fromStep: "peso", offset: -5, fallback: 65 }`.
 - **Imágenes:** ruta dentro de `public/`, p. ej. `"/images/hero.webp"`.
 - **Textos:** siempre voseo. Hay un test que falla si aparece "tú", "tienes", "quieres", etc.
@@ -144,9 +147,9 @@ Funciones puras en `src/lib/rules/`, con tests en `src/lib/__tests__/`:
 |---|---|
 | `bmi.ts` | IMC con 1 decimal y rango de referencia de la OMS, con textos neutros ("Dentro del rango de referencia"), sin diagnósticos. |
 | `pace.ts` | Ritmo hacia el peso objetivo entre **0,5 y 1 kg por semana**. Si el objetivo deja el IMC < 18,5 → **no promete fecha** (`unhealthy-target`). Si el objetivo es mantener o subir → sin proyección. |
-| `level.ts` | Nivel **suave / intermedio** según paso 9 (inactividad), 11 (sensación) y 16 (síntomas). Puntos: inactividad 0/1/2/2, sensación molestias 2 · cansancio 1 · bien 0, síntomas +1 c/u (dolor articular, suelo pélvico, cansancio; tope 2). Puntaje ≥ 2 → suave. Sin datos → suave. |
-| `benefits.ts` | Ordena los beneficios de la oferta: objetivo ×3, zonas ×2, "qué querés lograr" ×2, el resto ×1. "Todo el cuerpo" activa todas las zonas. |
-| `summary.ts` | Arma el resumen (objetivo, zonas, nivel, IMC, ritmo, beneficios ordenados). |
+| `level.ts` | Nivel **suave / intermedio** según molestias, edad y cuerpo. Puntos: cualquier molestia 2, edad 60-64 1 · 65+ 2, sobrepeso 1. Puntaje ≥ 2 → suave. Sin datos → suave. |
+| `benefits.ts` | Ordena los beneficios de la oferta: zonas ×3, cuerpo ×2, molestias ×2, el resto ×1. |
+| `summary.ts` | Arma el resumen (objetivo en kilos, zonas, zona que cuidamos, nivel, IMC y ritmo si hay altura y peso, beneficios ordenados). |
 
 Para cambiar umbrales, editá las constantes al principio de cada archivo y corré `npm test`.
 
@@ -296,8 +299,7 @@ Medido con el build de producción en local, perfil "Slow 4G" de Lighthouse mobi
 | Página | LCP | Elemento LCP |
 |---|---|---|
 | `/` (paso 1) | ~0,97 s local · ~0,9 s en Vercel | imagen hero |
-| `/q/no-estas-sola` | ~1,35 s local · ~1,27 s en Vercel | imagen |
-| `/q/oferta` | ~1,2 s local · ~1,14 s en Vercel | titular |
+| `/q/resultado` (antes `/q/oferta`) | ~1,2 s local · ~1,14 s en Vercel (medido antes del quiz corto) | titular |
 
 Volvé a medir con PageSpeed Insights sobre tu dominio real después del deploy.
 

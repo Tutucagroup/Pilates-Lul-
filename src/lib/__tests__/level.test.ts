@@ -2,27 +2,21 @@ import { describe, expect, it } from "vitest";
 import { chooseLevel, levelScore } from "../rules/level";
 
 describe("level", () => {
-  it("activa reciente y se mueve bien → intermedio", () => {
-    expect(chooseLevel({ inactividad: "lt6m", sensacion: "bien", sintomas: ["ninguna"] })).toBe("intermedio");
+  it("sin molestias, menos de 60 y cuerpo regular → intermedio", () => {
+    expect(chooseLevel({ molestias: "ninguna", edad: "50-54", cuerpo: "regular" })).toBe("intermedio");
   });
-  it("molestias → suave", () => {
-    expect(chooseLevel({ inactividad: "lt6m", sensacion: "molestias" })).toBe("suave");
+  it("cualquier molestia → suave", () => {
+    for (const m of ["rodillas", "cadera", "espalda", "pies"]) {
+      expect(chooseLevel({ molestias: m, edad: "40-49", cuerpo: "regular" })).toBe("suave");
+    }
   });
-  it("muchos años sin actividad → suave", () => {
-    expect(chooseLevel({ inactividad: "3y+", sensacion: "bien" })).toBe("suave");
-    expect(chooseLevel({ inactividad: "nunca", sensacion: "bien" })).toBe("suave");
+  it("65 o más → suave", () => {
+    expect(chooseLevel({ molestias: "ninguna", edad: "65+", cuerpo: "regular" })).toBe("suave");
   });
-  it("1-2 años + se cansa → suave", () => {
-    expect(chooseLevel({ inactividad: "1-2y", sensacion: "cansancio" })).toBe("suave");
-  });
-  it("los síntomas suman, con tope", () => {
-    expect(levelScore({ inactividad: "lt6m", sensacion: "bien", sintomas: ["dolor-articular"] })).toBe(1);
-    expect(
-      levelScore({ inactividad: "lt6m", sensacion: "bien", sintomas: ["dolor-articular", "suelo-pelvico", "cansancio"] }),
-    ).toBe(2);
-    expect(chooseLevel({ inactividad: "lt6m", sensacion: "bien", sintomas: ["dolor-articular", "suelo-pelvico"] })).toBe(
-      "suave",
-    );
+  it("60-64 con sobrepeso → suave; 60-64 solo → intermedio", () => {
+    expect(chooseLevel({ molestias: "ninguna", edad: "60-64", cuerpo: "sobrepeso" })).toBe("suave");
+    expect(chooseLevel({ molestias: "ninguna", edad: "60-64", cuerpo: "flacido" })).toBe("intermedio");
+    expect(levelScore({ molestias: "rodillas", edad: "65+", cuerpo: "sobrepeso" })).toBe(5);
   });
   it("sin datos → suave por seguridad", () => {
     expect(chooseLevel({})).toBe("suave");

@@ -7,6 +7,10 @@ const nextConfig: NextConfig = {
     imageSizes: [96, 140, 210, 320],
   },
   poweredByHeader: false,
+  async redirects() {
+    // La oferta ahora está dentro del resultado: los links viejos siguen funcionando.
+    return [{ source: "/q/oferta", destination: "/q/resultado", permanent: false }];
+  },
   async headers() {
     return [
       {

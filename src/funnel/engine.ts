@@ -34,9 +34,9 @@ export function prevStepId(steps: Step[], currentId: string, answers: Answers): 
   return i > 0 ? vis[i - 1].id : null;
 }
 
-/** Pasos que se cuentan en la barra de progreso (el cuestionario, sin loader/resultado/oferta). */
+/** Pasos que se cuentan en la barra de progreso (el cuestionario, sin loader/resultado). */
 export function isQuestionStep(s: Step): boolean {
-  return s.type !== "loader" && s.type !== "result" && s.type !== "offer";
+  return s.type !== "loader" && s.type !== "result";
 }
 
 /** Progreso 0..1 del paso actual dentro de las preguntas visibles. */

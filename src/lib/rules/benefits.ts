@@ -10,8 +10,8 @@ export function selectedIds(answers: Answers): Set<string> {
   return out;
 }
 
-/** Pesos: el objetivo principal y las zonas pesan más que el resto. */
-const WEIGHTED_STEPS: Record<string, number> = { objetivo: 3, zonas: 2, lograr: 2 };
+/** Pesos: las zonas que quiere trabajar pesan más que el resto. */
+const WEIGHTED_STEPS: Record<string, number> = { zonas: 3, cuerpo: 2, molestias: 2 };
 
 /**
  * Ordena los beneficios de la oferta según las respuestas.
@@ -25,9 +25,6 @@ export function orderBenefits(benefits: Benefit[], answers: Answers): Benefit[] 
     const ids = typeof v === "string" ? [v] : Array.isArray(v) ? v : [];
     ids.forEach((id) => weighted.set(id, Math.max(weighted.get(id) ?? 0, w)));
   }
-  // "Todo el cuerpo" activa todas las zonas.
-  if (all.has("todo")) ["abdomen", "brazos", "piernas", "espalda"].forEach((z) => all.add(z));
-
   const score = (b: Benefit) =>
     b.tags.reduce((acc, t) => acc + (weighted.get(t) ?? (all.has(t) ? 1 : 0)), 0);
 

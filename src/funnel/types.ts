@@ -96,18 +96,13 @@ export type ResultStep = StepBase & {
   cta: string;
 };
 
-export type OfferStep = StepBase & {
-  type: "offer";
-};
-
 export type Step =
   | SingleStep
   | MultiStep
   | InfoStep
   | RulerStep
   | LoaderStep
-  | ResultStep
-  | OfferStep;
+  | ResultStep;
 
 export type StepType = Step["type"];
 
@@ -156,6 +151,7 @@ export type OfferContent = {
 export type PlanSummaryLike = {
   goalLabel: string | null;
   zoneLabels: string[];
+  careText: string | null;
   levelLabel: string;
 };
 

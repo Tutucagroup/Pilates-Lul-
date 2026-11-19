@@ -16,13 +16,13 @@ import type { RulerStep, Step } from "@/funnel/types";
 const steps = funnel.steps;
 
 describe("config", () => {
-  it("tiene 19 pasos con IDs únicos", () => {
-    expect(steps).toHaveLength(19);
+  it("tiene 7 pasos con IDs únicos (5 preguntas + loader + resultado)", () => {
+    expect(steps).toHaveLength(7);
     expect(new Set(steps.map((s) => s.id)).size).toBe(steps.length);
   });
-  it("usa los 7 tipos de paso", () => {
+  it("usa los tipos de paso del quiz corto", () => {
     expect(new Set(steps.map((s) => s.type))).toEqual(
-      new Set(["single", "multi", "info", "ruler", "loader", "result", "offer"]),
+      new Set(["single", "multi", "loader", "result"]),
     );
   });
   it("todo el texto usa voseo (sin 'tú', 'tienes', 'quieres', 'puedes')", () => {
@@ -33,7 +33,7 @@ describe("config", () => {
 
 describe("engine", () => {
   it("condiciones", () => {
-    expect(evalCondition({ stepId: "sensacion", anyOf: ["molestias"] }, { sensacion: "molestias" })).toBe(true);
+    expect(evalCondition({ stepId: "molestias", anyOf: ["rodillas"] }, { molestias: "rodillas" })).toBe(true);
     expect(evalCondition({ stepId: "zonas", anyOf: ["brazos"] }, { zonas: ["abdomen", "brazos"] })).toBe(true);
     expect(evalCondition({ stepId: "zonas", anyOf: ["brazos"] }, {})).toBe(false);
     expect(evalCondition(undefined, {})).toBe(true);
@@ -51,30 +51,37 @@ describe("engine", () => {
   });
 
   it("'Ninguna' es excluyente", () => {
-    const opts = (steps.find((s) => s.id === "sintomas") as Extract<Step, { type: "multi" }>).options;
-    let sel = toggleMulti(opts, [], "duermo-mal");
-    sel = toggleMulti(opts, sel, "cansancio");
-    expect(sel).toEqual(["duermo-mal", "cansancio"]);
+    const opts = [
+      { id: "a", label: "A" },
+      { id: "b", label: "B" },
+      { id: "ninguna", label: "Ninguna", exclusive: true },
+    ];
+    let sel = toggleMulti(opts, [], "a");
+    sel = toggleMulti(opts, sel, "b");
+    expect(sel).toEqual(["a", "b"]);
     sel = toggleMulti(opts, sel, "ninguna");
     expect(sel).toEqual(["ninguna"]);
-    sel = toggleMulti(opts, sel, "humor");
-    expect(sel).toEqual(["humor"]);
-    sel = toggleMulti(opts, sel, "humor");
+    sel = toggleMulti(opts, sel, "a");
+    expect(sel).toEqual(["a"]);
+    sel = toggleMulti(opts, sel, "a");
     expect(sel).toEqual([]);
   });
 
-  it("peso objetivo arranca en peso actual - 5", () => {
-    const step = steps.find((s) => s.id === "peso-objetivo") as RulerStep;
+  it("regla: el valor inicial sale del paso anterior", () => {
+    const step: RulerStep = {
+      id: "peso-objetivo", name: "x", type: "ruler", measure: "weight", title: "x", cta: "ok",
+      min: 40, max: 150, initial: { fromStep: "peso", offset: -5, fallback: 65 },
+    };
     expect(rulerInitial(step, { peso: 80 })).toBe(75);
     expect(rulerInitial(step, {})).toBe(65);
     expect(rulerInitial(step, { peso: 42 })).toBe(40); // respeta el mínimo
   });
 
   it("progreso y primer paso sin responder", () => {
-    expect(progressFor(steps, "edad", {})).toBeCloseTo(1 / 16);
-    expect(progressFor(steps, "sintomas", {})).toBe(1);
-    expect(firstUnanswered(steps, {})?.id).toBe("edad");
-    expect(firstUnanswered(steps, { edad: "50-59" })?.id).toBe("objetivo");
+    expect(progressFor(steps, "kilos", {})).toBeCloseTo(1 / 5);
+    expect(progressFor(steps, "zonas", {})).toBe(1);
+    expect(firstUnanswered(steps, {})?.id).toBe("kilos");
+    expect(firstUnanswered(steps, { kilos: "4-6" })?.id).toBe("molestias");
   });
 
   it("asignación A/B determinística y aproximadamente pareja", () => {

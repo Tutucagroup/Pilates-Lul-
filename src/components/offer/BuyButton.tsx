@@ -11,10 +11,10 @@ const configured = /^https:\/\//.test(brand.impultienda.checkoutUrl);
 /** El upsell se ofrece en el quiz si tiene su ID cargado y ya es order bump en el checkout (brand.config.ts). */
 export const upsellOn = brand.upsell.productId.trim() !== "" && brand.upsell.inCheckout;
 
-type Props = { label: string; level: string; stepIndex: number; stepName: string; position: "top" | "bottom" };
+type Props = { label: string; level: string; stepId: string; stepIndex: number; stepName: string; position: "top" | "bottom" };
 
 /** Botón de compra: InitiateCheckout (Pixel + CAPI, mismo event_id) y redirección al checkout de Impultienda. */
-export function BuyButton({ label, level, stepIndex, stepName, position }: Props) {
+export function BuyButton({ label, level, stepId, stepIndex, stepName, position }: Props) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -41,7 +41,7 @@ export function BuyButton({ label, level, stepIndex, stepName, position }: Props
         eventId,
       );
     }
-    logQuizEvent({ event: "checkout", stepId: "oferta", stepIndex, stepName, value: { position, eventId, level, bump } });
+    logQuizEvent({ event: "checkout", stepId, stepIndex, stepName, value: { position, eventId, level, bump } });
     window.location.href = buildCheckoutUrl({
       checkoutUrl: brand.impultienda.checkoutUrl,
       attribution: s.attribution,
