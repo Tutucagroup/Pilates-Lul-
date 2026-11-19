@@ -7,6 +7,8 @@ Preguntas: kilos a bajar · dónde siente molestias · edad · cómo describe su
 
 **En vivo:** https://pilates-lul.vercel.app
 
+**Landing de venta directa (para probar contra el quiz):** `/landing` (`src/app/landing/page.tsx`). Botón directo al checkout con las UTM de la visita. Los clics de compra quedan en Supabase con `stepId: "landing"`. Imágenes en `public/images/landing/`; las capturas de la app son pantallas reales de app-alumnas. Para separar las ventas de cada página, usá un `utm_content` distinto en cada anuncio (por ejemplo `quiz` y `landing`).
+
 Next.js 15 (App Router) · TypeScript · Tailwind 4 · Zustand · Supabase · Meta Pixel + Conversions API · Vercel.
 
 > La **app de alumnas** (el producto que se entrega tras la compra) es un proyecto aparte: está en [`app-alumnas/`](app-alumnas/README.md) y se publica como otro proyecto de Vercel.

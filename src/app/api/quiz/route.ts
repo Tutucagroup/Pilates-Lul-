@@ -3,7 +3,8 @@ import { funnel } from "@/config/funnel.config";
 import { supabaseAdmin } from "@/lib/supabase/server";
 
 const EVENTS = new Set(["view", "answer", "result", "checkout"]);
-const STEP_IDS = new Set(funnel.steps.map((s) => s.id));
+// "landing" = clics de compra de la landing de venta directa (/landing).
+const STEP_IDS = new Set([...funnel.steps.map((s) => s.id), "landing"]);
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 /** Registra un evento del quiz (vista, respuesta, resultado, checkout) en Supabase. */
