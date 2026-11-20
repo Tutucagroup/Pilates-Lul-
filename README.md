@@ -69,7 +69,7 @@ public/images/BRIEFS.md       ← brief de cada imagen
 Todo en `src/config/brand.config.ts`:
 
 ```ts
-pricing: { currency: "ARS", listPrice: 45000, offerPrice: 19900, installments: 3 },
+pricing: { currency: "ARS", listPrice: 45000, offerPrice: 14900, installments: 3 },
 guarantee: { days: 7 },
 program: { name: "Reto de 28 días", days: 28, minutesPerDay: 15 },
 ```
@@ -227,11 +227,11 @@ Qué hace con cada venta:
 - **Mail de bienvenida propio (opcional):** solo sale si cargás un proveedor de mails (`RESEND_API_KEY` y `MAIL_FROM`). Sin eso, el webhook responde 200 y la alumna recibe solo el mail de entrega de Impultienda. El texto está en `src/lib/impultienda/welcome-email.ts` (fuente: `entrega/mail-confirmacion-compra.md`).
 - Si falla el envío del mail, responde 502 e Impultienda reintenta durante ~32 h.
 
-### 4 · Los 2 programas en un solo producto ($19.900)
-El reto de 28 días y "Rejuvenecé y Adelgazá después de los 50" **no se venden por separado**: los dos vienen en el producto principal de $19.900.
+### 4 · Los 2 programas en un solo producto ($14.900)
+El reto de 28 días y "Rejuvenecé y Adelgazá después de los 50" **no se venden por separado**: los dos vienen en el producto principal de $14.900.
 
 - **Quiz:** junto al precio, la tarjeta "Incluye los 2 programas" (`brand.config.ts → includedProgram`). También están en "Qué incluye" y en la FAQ. No hay order bump.
-- **Checkout (Impultienda):** el principal «Pilates Asiático - Reto 28 días» ($19.900) lleva como **bono** «Rejuvenecé y Adelgazá después de los 50» (`c1d30ae5-2f71-4cce-85e9-c7cd97abb27d`, entregable: link a la app). El checkout lo muestra como incluido debajo del principal y llega en el mismo mail de entrega. La etiqueta del resumen se elige en Diseño de checkout → «Anuncio de bonos en el resumen».
+- **Checkout (Impultienda):** el principal «Pilates Asiático - Reto 28 días» ($14.900) lleva como **bono** «Rejuvenecé y Adelgazá después de los 50» (`c1d30ae5-2f71-4cce-85e9-c7cd97abb27d`, entregable: link a la app). El checkout lo muestra como incluido debajo del principal y llega en el mismo mail de entrega. La etiqueta del resumen se elige en Diseño de checkout → «Anuncio de bonos en el resumen».
 - El upsell viejo de $5.900 (`50ea7b14-43ec-4901-b615-f81b4da73143`) quedó con **«Solo post-compra»** y sin funnel post-compra, así que no se ofrece en ningún lado. En una tienda clásica los ebooks no se desactivan desde el conector: si querés sacarlo del todo, borralo desde Diseño de ebooks.
 - **Webhook y mail:** cada compra del reto anota los 2 planes y el mail de bienvenida menciona los dos.
 - **App de alumnas:** los 2 planes están abiertos para todas en Programa (ver `app-alumnas/README.md`).
