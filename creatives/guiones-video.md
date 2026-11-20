@@ -114,17 +114,17 @@ Preguntas para que la hija le haga fuera de cámara (se usa la mejor respuesta):
 ### Bloque D · Oferta + cierre (43–60 s) — la instructora, más cerca de cámara, tono de aviso
 | Tiempo | Imagen | VO | TP |
 |---|---|---|---|
-| 43–48 s | Plano medio corto. | "Ahora el reto está en oferta: de cuarenta y cinco mil pesos, lo tenés a diecinueve mil novecientos." | ~~$45.000~~ **$19.900** en oferta |
+| 43–48 s | Plano medio corto. | "Ahora el reto está en oferta: de cuarenta y cinco mil pesos, lo tenés a catorce mil novecientos." | ~~$45.000~~ **$14.900** en oferta |
 | 48–52 s | Mismo plano, cuenta con los dedos. | "Es un pago único, y tenés acceso de por vida." | Pago único · acceso de por vida |
 | 52–56 s | Mismo plano, gesto de tranquilidad. | "Y si en siete días no es para vos, te devolvemos el dinero." | Garantía de 7 días |
 | 56–60 s | Placa final (ver abajo). | "Tocá abajo, hacé el cuestionario de un minuto y empezá hoy." | Hacé el cuestionario 👇 |
 
-**Placa final (últimos 3–4 s):** fondo crudo/beige con luz natural, logo de Pilates Lulú arriba al centro, título grande "RETO DE 28 DÍAS", subtítulo "Pilates Asiático para mujeres +40", precio "~~$45.000~~ $19.900 · en oferta · pago único · acceso de por vida", botón con borde "Hacé el cuestionario y empezá hoy".
+**Placa final (últimos 3–4 s):** fondo crudo/beige con luz natural, logo de Pilates Lulú arriba al centro, título grande "RETO DE 28 DÍAS", subtítulo "Pilates Asiático para mujeres +40", precio "~~$45.000~~ $14.900 · en oferta · pago único · acceso de por vida", botón con borde "Hacé el cuestionario y empezá hoy".
 
 **Urgencia (opcional, solo si es real):** si la oferta tiene fecha de cierre cargada en `brand.config.ts → urgency.countdown.endsAt`, se puede sumar al bloque D: *"La oferta termina el [día real]."* con TP "Termina el [fecha]". Si no hay fecha real, no se dice. Tampoco se nombran personas que "ya entraron" ni "últimos cupos" si no hay un cupo real.
 
 **Chequeos antes de publicar**
-- El precio dicho y escrito tiene que coincidir con Impultienda ($19.900, tachado $45.000). No se ofrecen cuotas: pago único con acceso de por vida.
+- El precio dicho y escrito tiene que coincidir con Impultienda ($14.900, tachado $45.000). No se ofrecen cuotas: pago único con acceso de por vida.
 - Nada de kilos, centímetros ni "antes/después" en el testimonio, aunque la alumna lo diga: se corta.
 - Sin preguntas sobre atributos de quien mira ("¿Sos mamá?", "¿Tenés más de 40?"): Meta las rechaza.
 

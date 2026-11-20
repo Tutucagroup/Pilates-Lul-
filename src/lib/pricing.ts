@@ -1,19 +1,19 @@
 import { brand } from "@/config/brand.config";
 
-/** Porcentaje de descuento redondeado al entero más cercano. 45.000 → 19.900 = 56%. */
+/** Porcentaje de descuento redondeado al entero más cercano. 45.000 → 14.900 = 67%. */
 export function discountPercent(listPrice: number, offerPrice: number): number {
   if (listPrice <= 0 || offerPrice >= listPrice) return 0;
   return Math.round((1 - offerPrice / listPrice) * 100);
 }
 
-/** Valor de cada cuota sin interés, redondeado hacia abajo al peso (19.900 / 3 = 6.633). */
+/** Valor de cada cuota sin interés, redondeado hacia abajo al peso (14.900 / 3 = 4.966). */
 export function installmentAmount(price: number, installments: number): number | null {
   if (!installments || installments < 2) return null;
   return Math.floor(price / installments);
 }
 
 const ars = new Intl.NumberFormat("es-AR", { maximumFractionDigits: 0 });
-/** "$19.900" */
+/** "$14.900" */
 export function formatMoney(value: number): string {
   return `$${ars.format(value)}`;
 }
