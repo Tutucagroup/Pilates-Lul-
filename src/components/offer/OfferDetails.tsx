@@ -4,6 +4,7 @@ import { brand } from "@/config/brand.config";
 import { funnel } from "@/config/funnel.config";
 import type { PlanSummary } from "@/lib/rules/summary";
 import { BuyButton } from "./BuyButton";
+import { ChatTestimonials } from "./ChatTestimonials";
 import { Faq } from "./Faq";
 import { PriceBox } from "./PriceBox";
 import { ReviewList } from "./ReviewList";
@@ -130,7 +131,8 @@ export function OfferDetails({ summary, hydrated, stepId, stepIndex, stepName }:
         />
       </div>
 
-      {/* Testimonios y reseñas reales (si hay) */}
+      {/* Mensajes de alumnas + testimonios y reseñas (si hay) */}
+      <ChatTestimonials />
       <TestimonialCarousel />
       <ReviewList />
 
