@@ -4,6 +4,7 @@ import { brand } from "@/config/brand.config";
 import { funnel } from "@/config/funnel.config";
 import { formatMoney, price } from "@/lib/pricing";
 import { Logo } from "@/components/Logo";
+import { ChatTestimonials } from "@/components/offer/ChatTestimonials";
 import { Faq } from "@/components/offer/Faq";
 import { ReviewList } from "@/components/offer/ReviewList";
 import { TestimonialCarousel } from "@/components/offer/TestimonialCarousel";
@@ -408,7 +409,8 @@ export default function Landing() {
       </Section>
 
       {/* 10 · Testimonios reales (se muestran solo si hay reseñas aprobadas con consentimiento) */}
-      <div className="mx-auto max-w-3xl px-4 empty:hidden">
+      <div className="mx-auto max-w-3xl px-4 pb-14 empty:hidden">
+        <ChatTestimonials className="mt-0" />
         <TestimonialCarousel />
         <ReviewList />
       </div>

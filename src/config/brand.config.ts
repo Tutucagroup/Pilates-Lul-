@@ -48,8 +48,8 @@ export const brand = {
     listPrice: 45000,
     /** Precio de oferta. Tiene que coincidir con el precio del producto en Impultienda. */
     offerPrice: 14900,
-    /** Cuotas sin interés que ofrece tu medio de pago. 0 o 1 = no mostrar cuotas. */
-    installments: 3,
+    /** Cuotas sin interés que ofrece tu medio de pago. 0 o 1 = no mostrar cuotas (hoy no se comunican). */
+    installments: 0,
   },
 
   guarantee: {

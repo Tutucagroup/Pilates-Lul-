@@ -22,6 +22,7 @@ describe("pricing", () => {
     expect(price.offerLabel).toBe("$14.900");
     expect(price.listLabel).toBe("$45.000");
     expect(price.discount).toBe(67);
-    expect(price.installmentLabel).toBe("$4.966");
+    expect(price.installments).toBeNull();
+    expect(price.installmentLabel).toBeNull();
   });
 });

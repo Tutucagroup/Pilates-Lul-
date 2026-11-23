@@ -126,7 +126,7 @@ export const funnel: FunnelConfig = {
       type: "result",
       title: "Tu plan está listo",
       // Botón de arriba: va directo al checkout de Impultienda.
-      cta: "Ver mi plan",
+      cta: "Quiero empezar mi reto",
     },
   ],
 
