@@ -25,16 +25,17 @@ export function ChatTestimonials({ className = "mt-12" }: { className?: string }
   return (
     <section aria-labelledby="mensajes-alumnas" className={className}>
       <h2 id="mensajes-alumnas" className="text-[22px] font-extrabold">Lo que nos escriben las alumnas</h2>
-      <ul className="mt-4 grid items-start gap-4 sm:grid-cols-2">
+      {/* Carrusel: se desliza con el dedo; la tarjeta siguiente asoma para que se note. */}
+      <ul className="no-scrollbar -mx-4 mt-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-2 sm:justify-center">
         {chats.map((c) => (
-          <li key={c.src} className="overflow-hidden rounded-3xl bg-ink shadow-lg shadow-black/10 ring-1 ring-black/5">
-            <Image src={c.src} alt={c.alt} width={c.width} height={c.height} sizes="(max-width: 640px) 100vw, 360px" className="h-auto w-full" />
+          <li
+            key={c.src}
+            className="w-[58%] max-w-[240px] shrink-0 snap-center overflow-hidden rounded-2xl bg-[#0b0f0e] shadow-md shadow-black/10 ring-1 ring-black/5"
+          >
+            <Image src={c.src} alt={c.alt} width={c.width} height={c.height} sizes="240px" className="h-auto w-full" />
           </li>
         ))}
       </ul>
-      <p className="mt-3 text-[13px] text-muted">
-        Mensajes de alumnas de ediciones anteriores del reto. Los resultados varían de una persona a otra.
-      </p>
     </section>
   );
 }
