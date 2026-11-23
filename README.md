@@ -3,7 +3,7 @@
 Funnel tipo cuestionario para el **Reto de 28 días de Pilates Asiático** (mujeres de 40 a 70 años, Argentina).
 5 preguntas → resultado personalizado con la venta en la misma pantalla → checkout de **Impultienda**.
 
-Preguntas: kilos a bajar · dónde siente molestias · edad · cómo describe su cuerpo · zonas a trabajar (varias). En la pantalla final el precio con los 2 programas incluidos y el botón **"Ver mi plan"** (directo al checkout) están arriba de todo; debajo, la explicación del resultado y el resto de la venta (beneficios, qué incluye, testimonios, FAQ, segundo botón, garantía). `/q/oferta` redirige a `/q/resultado` para no romper links viejos.
+Preguntas: kilos a bajar · dónde siente molestias · edad · cómo describe su cuerpo · zonas a trabajar (varias). En la pantalla final el precio con los 2 programas incluidos y el botón **"Quiero empezar mi reto"** (directo al checkout) están arriba de todo; debajo, la explicación del resultado y el resto de la venta (beneficios, qué incluye, testimonios, FAQ, segundo botón, garantía). `/q/oferta` redirige a `/q/resultado` para no romper links viejos.
 
 **En vivo:** https://pilates-lul.vercel.app
 
@@ -69,13 +69,13 @@ public/images/BRIEFS.md       ← brief de cada imagen
 Todo en `src/config/brand.config.ts`:
 
 ```ts
-pricing: { currency: "ARS", listPrice: 45000, offerPrice: 14900, installments: 3 },
+pricing: { currency: "ARS", listPrice: 45000, offerPrice: 14900, installments: 0 },
 guarantee: { days: 7 },
 program: { name: "Reto de 28 días", days: 28, minutesPerDay: 15 },
 ```
 
-- El **% OFF** se calcula solo (`56%`) y las **cuotas** también (`3 × $6.633`). Ningún componente tiene precios escritos a mano.
-- `installments: 0` oculta las cuotas.
+- El **% OFF** se calcula solo (`67%`). Las **cuotas** hoy no se comunican (`installments: 0`); con `installments: 3` se calculan solas. Ningún componente tiene precios escritos a mano.
+- `installments: 0` oculta las cuotas en el quiz y en la landing.
 - Si cambiás el precio acá, **cambialo también en Impultienda** (precio y precio tachado).
 - Los colores de marca están en `brand.config.ts` y espejados en `src/app/globals.css` (`@theme`). Si cambiás uno, cambiá el otro.
 
@@ -240,7 +240,7 @@ El reto de 28 días y "Rejuvenecé y Adelgazá después de los 50" **no se vende
 Hacé una compra de prueba y verificá que llegue el mail de entrega, que su botón abra la app y que la venta tenga las `utm_*`.
 
 ### 6 · Cuotas
-"3 cuotas sin interés" depende de tu medio de pago (p. ej. Mercado Pago con cuotas sin interés activadas). Confirmalo en tu pasarela; si no aplica, poné `installments: 0`.
+Hoy no se comunican cuotas (`installments: 0`). "Cuotas sin interés" depende de tu medio de pago (p. ej. Mercado Pago con cuotas sin interés activadas): confirmalo en tu pasarela antes de volver a mostrarlas.
 
 ---
 
