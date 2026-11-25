@@ -1,0 +1,84 @@
+[Script Info]
+ScriptType: v4.00+
+PlayResX: 1080
+PlayResY: 1920
+WrapStyle: 0
+
+[V4+ Styles]
+Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
+Style: Sub,Inter Display Black,86,&H00FFFFFF,&H00FFFFFF,&H00000000,&H64000000,0,0,0,0,100,100,0,0,1,7,3,2,70,70,380,1
+
+[Events]
+Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
+Dialogue: 0,0:00:00.00,0:00:00.52,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}¡Chicas,
+Dialogue: 0,0:00:00.60,0:00:01.36,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}miren esto!
+Dialogue: 0,0:00:01.72,0:00:02.36,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}Esta es la
+Dialogue: 0,0:00:02.24,0:00:03.02,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}app de Pilates
+Dialogue: 0,0:00:02.90,0:00:03.28,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}{\c&H00E5FF&}Lulú.{\c&HFFFFFF&}
+Dialogue: 0,0:00:03.62,0:00:04.34,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}Es el Reto
+Dialogue: 0,0:00:04.22,0:00:05.34,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}de {\c&H00E5FF&}28{\c&HFFFFFF&} días
+Dialogue: 0,0:00:05.22,0:00:06.48,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}de Pilates Asiático:
+Dialogue: 0,0:00:06.58,0:00:07.86,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}{\c&H00E5FF&}15{\c&HFFFFFF&} minutitos por
+Dialogue: 0,0:00:07.74,0:00:08.14,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}día,
+Dialogue: 0,0:00:08.02,0:00:08.98,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}en tu casa…
+Dialogue: 0,0:00:08.86,0:00:10.96,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}y sale {\c&H00E5FF&}$14.900{\c&HFFFFFF&}
+Dialogue: 0,0:00:10.84,0:00:11.60,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}pesos.
+Dialogue: 0,0:00:11.84,0:00:13.26,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}{\c&H00E5FF&}¡$14.900!{\c&HFFFFFF&}
+Dialogue: 0,0:00:13.94,0:00:14.90,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}Mucho menos que
+Dialogue: 0,0:00:14.78,0:00:15.46,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}una cuota del
+Dialogue: 0,0:00:15.34,0:00:16.04,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}gimnasio.
+Dialogue: 0,0:00:16.50,0:00:17.42,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}Y escuchá esto:
+Dialogue: 0,0:00:17.78,0:00:18.72,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}con ese mismo
+Dialogue: 0,0:00:18.60,0:00:19.78,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}pago te llevás
+Dialogue: 0,0:00:19.66,0:00:21.14,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}{\c&H00E5FF&}dos{\c&HFFFFFF&} programas.
+Dialogue: 0,0:00:21.02,0:00:21.72,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}El Reto de
+Dialogue: 0,0:00:21.60,0:00:22.58,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}{\c&H00E5FF&}28{\c&HFFFFFF&} días…
+Dialogue: 0,0:00:22.46,0:00:24.27,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}y Rejuvenecé y
+Dialogue: 0,0:00:24.15,0:00:25.24,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}Adelgazá después de
+Dialogue: 0,0:00:25.12,0:00:25.68,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}los {\c&H00E5FF&}50,{\c&HFFFFFF&}
+Dialogue: 0,0:00:26.02,0:00:27.14,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}con {\c&H00E5FF&}20{\c&HFFFFFF&} clases
+Dialogue: 0,0:00:27.02,0:00:27.42,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}más.
+Dialogue: 0,0:00:27.76,0:00:28.42,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}Todo junto,
+Dialogue: 0,0:00:28.30,0:00:29.30,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}en un solo
+Dialogue: 0,0:00:29.18,0:00:29.74,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}pago.
+Dialogue: 0,0:00:30.23,0:00:31.13,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}¿No tenés tiempo?
+Dialogue: 0,0:00:31.63,0:00:32.43,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}Te entiendo…
+Dialogue: 0,0:00:32.75,0:00:34.03,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}pero escuchame un
+Dialogue: 0,0:00:33.91,0:00:34.33,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}segundo.
+Dialogue: 0,0:00:34.69,0:00:35.55,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}Con {\c&H00E5FF&}15{\c&HFFFFFF&} minutos
+Dialogue: 0,0:00:35.43,0:00:36.25,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}en tu casa,
+Dialogue: 0,0:00:36.41,0:00:37.13,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}{\c&H00E5FF&}alcanza.{\c&HFFFFFF&}
+Dialogue: 0,0:00:37.41,0:00:38.37,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}Sin gimnasio,
+Dialogue: 0,0:00:38.41,0:00:39.51,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}sin saltos y
+Dialogue: 0,0:00:39.39,0:00:40.35,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}sin equipos:
+Dialogue: 0,0:00:40.59,0:00:42.01,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}movimientos lentos,
+Dialogue: 0,0:00:41.99,0:00:42.93,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}con respiración,
+Dialogue: 0,0:00:43.07,0:00:43.71,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}que cuidan tus
+Dialogue: 0,0:00:43.59,0:00:44.59,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}rodillas y tu
+Dialogue: 0,0:00:44.47,0:00:45.13,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}espalda.
+Dialogue: 0,0:00:45.53,0:00:46.59,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}Muchas me preguntan
+Dialogue: 0,0:00:46.47,0:00:47.29,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}qué trae.
+Dialogue: 0,0:00:47.45,0:00:48.29,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}Tenés tus clases
+Dialogue: 0,0:00:48.17,0:00:48.79,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}guiadas,
+Dialogue: 0,0:00:48.67,0:00:50.01,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}día por día.
+Dialogue: 0,0:00:50.21,0:00:51.53,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}Recetas simples para
+Dialogue: 0,0:00:51.41,0:00:52.53,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}acompañar el reto.
+Dialogue: 0,0:00:52.69,0:00:53.51,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}Tu progreso,
+Dialogue: 0,0:00:53.39,0:00:55.05,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}semana a semana.
+Dialogue: 0,0:00:55.29,0:00:55.73,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}Y a {\c&H00E5FF&}Lulú,{\c&HFFFFFF&}
+Dialogue: 0,0:00:55.99,0:00:56.97,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}tu coach virtual,
+Dialogue: 0,0:00:56.85,0:00:58.15,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}para cualquier duda.
+Dialogue: 0,0:00:58.45,0:00:59.25,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}Todo desde el
+Dialogue: 0,0:00:59.13,0:00:59.69,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}celular,
+Dialogue: 0,0:00:59.87,0:01:01.01,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}así sabés exactamente
+Dialogue: 0,0:01:00.89,0:01:02.35,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}qué hacer cada
+Dialogue: 0,0:01:02.23,0:01:02.69,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}día.
+Dialogue: 0,0:01:03.23,0:01:04.91,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}{\c&H00E5FF&}$14.900{\c&HFFFFFF&} pesos,
+Dialogue: 0,0:01:05.13,0:01:05.97,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}pago {\c&H00E5FF&}único.{\c&HFFFFFF&}
+Dialogue: 0,0:01:06.29,0:01:07.77,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}Acceso inmediato y
+Dialogue: 0,0:01:07.65,0:01:08.59,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}{\c&H00E5FF&}7{\c&HFFFFFF&} días de
+Dialogue: 0,0:01:08.47,0:01:09.17,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}{\c&H00E5FF&}garantía.{\c&HFFFFFF&}
+Dialogue: 0,0:01:09.37,0:01:10.33,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}Hacé el cuestionario
+Dialogue: 0,0:01:10.21,0:01:11.27,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}de un minuto
+Dialogue: 0,0:01:11.15,0:01:12.23,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}y empezá hoy.
+Dialogue: 0,0:01:12.41,0:01:13.17,Sub,,0,0,0,,{\fscx88\fscy88\t(0,90,\fscx100\fscy100)}¡Tocá {\c&H00E5FF&}abajo!{\c&HFFFFFF&}
